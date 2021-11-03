@@ -85,4 +85,12 @@ export const styles = StyleSheet.create({
   statusBar: {
     backgroundColor: '#ffffff',
   },
+  resetView: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  button2: {
+    marginTop: 20,
+  },
 });

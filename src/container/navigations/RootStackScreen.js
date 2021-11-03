@@ -5,6 +5,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import forgotPassword from '../screens/forgotPassword';
+import resetPassword from '../screens/resetPassword';
 
 const RootStack = createNativeStackNavigator();
 
@@ -34,6 +35,18 @@ const RootStackScreen = ({navigation}) => {
         component={forgotPassword}
         options={{
           title: 'Forgot Password',
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: '#ffffff',
+          },
+          headerShadowVisible: true,
+        }}
+      />
+      <RootStack.Screen
+        name="resetPassword"
+        component={resetPassword}
+        options={{
+          title: 'Reset Password',
           headerShown: true,
           headerStyle: {
             backgroundColor: '#ffffff',

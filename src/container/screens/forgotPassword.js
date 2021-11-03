@@ -6,7 +6,7 @@ import {Button, HelperText, TextInput} from 'react-native-paper';
 import {styles} from '../../styles/styles';
 import {e} from '../../lib/reg exp/email';
 
-const forgotPassword = () => {
+const forgotPassword = ({navigation}) => {
   const [email, setemail] = React.useState('');
   const [isValidEmail, setisValidEmail] = React.useState(true);
   const changeEmail = text => {
@@ -38,7 +38,9 @@ const forgotPassword = () => {
           </HelperText>
         </View>
         <View style={styles.textInputViewStyle}>
-          <Button onPress={() => console.warn('pressed')} mode="contained">
+          <Button
+            onPress={() => navigation.navigate('resetPassword')}
+            mode="contained">
             Submit
           </Button>
         </View>

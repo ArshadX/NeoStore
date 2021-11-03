@@ -29,11 +29,15 @@ export const changeEmail = (text, setEmail, setValidEmail) => {
   }
 };
 
-export const changePassword = text => {
+export const changePassword = (text, setPassword, setValidPassword) => {
   let temp = text.trim();
-
-  setisValidPassword(p.test(temp));
-  setpassword(temp);
+  if (temp === '') {
+    setValidPassword(true);
+    setPassword('');
+  } else {
+    setValidPassword(p.test(temp));
+    setPassword(temp);
+  }
 };
 
 export const changeName = (text, setName, setValidName) => {
@@ -55,5 +59,17 @@ export const changePhone = (text, setPhone, setValidPhone) => {
   } else {
     setValidPhone(phoneNum.test(temp));
     setPhone(temp);
+  }
+};
+export const changeConfirmPassword = (
+  text,
+  password,
+  setValidConfirmPassword,
+) => {
+  let temp = text.trim();
+  if (temp === '') {
+    setValidConfirmPassword(true);
+  } else {
+    setValidConfirmPassword(password == temp);
   }
 };

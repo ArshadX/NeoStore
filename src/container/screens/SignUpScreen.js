@@ -15,7 +15,12 @@ import {
 import {Button, TextInput, RadioButton, HelperText} from 'react-native-paper';
 import CheckBox from '@react-native-community/checkbox';
 import {styles} from '../../styles/styles';
-import {changeName, changePhone} from '../../lib/validation/validation';
+import {
+  changeName,
+  changePhone,
+  changePassword,
+  changeConfirmPassword,
+} from '../../lib/validation/validation';
 import {changeEmail} from '../../lib/validation/validation';
 
 const SignUpScreen = ({navigation}) => {
@@ -32,7 +37,8 @@ const SignUpScreen = ({navigation}) => {
   const [isValidPassword, setValidPassword] = React.useState(true);
   const [phone, setPhone] = React.useState('');
   const [isValidPhone, setValidPhone] = React.useState(true);
-
+  const [isValidConfirmPassword, setValidConfirmPassword] =
+    React.useState(true);
   //state end
   return (
     <View style={styles.Container}>
@@ -114,7 +120,7 @@ const SignUpScreen = ({navigation}) => {
               <TextInput
                 mode="flat"
                 label="Phone number"
-                error={false}
+                error={!isValidPhone}
                 selectionColor="#e5e4e2"
                 placeholder="Ex. 12345..."
                 dense={true}
@@ -134,11 +140,14 @@ const SignUpScreen = ({navigation}) => {
               <TextInput
                 mode="flat"
                 label="Password"
-                error={false}
+                error={!isValidPassword}
                 selectionColor="#e5e4e2"
                 placeholder="password..."
                 dense={true}
                 style={styles.textInputStyle}
+                onChangeText={text =>
+                  changePassword(text, setPassword, setValidPassword)
+                }
               />
               <HelperText
                 type="error"
@@ -151,17 +160,20 @@ const SignUpScreen = ({navigation}) => {
               <TextInput
                 mode="flat"
                 label="Confirm Password"
-                error={false}
+                error={!isValidConfirmPassword}
                 selectionColor="#e5e4e2"
                 placeholder="password..."
                 dense={true}
                 style={styles.textInputStyle}
+                onChangeText={text =>
+                  changeConfirmPassword(text, password, setValidConfirmPassword)
+                }
               />
               <HelperText
                 type="error"
-                visible={!isValidPassword}
+                visible={!isValidConfirmPassword}
                 style={styles.helperText}>
-                alphanumeric and min 8 char!
+                does not match!
               </HelperText>
             </View>
             <View style={styles.checkbox}>
