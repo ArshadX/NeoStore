@@ -2,6 +2,8 @@ import React from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
+import {IconButton, Colors} from 'react-native-paper';
+
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import forgotPassword from '../screens/forgotPassword';
@@ -16,7 +18,16 @@ const RootStackScreen = ({navigation}) => {
         name="SignIn"
         component={SignInScreen}
         options={{
-          headerShown: false,
+          title: 'Sign In',
+          headerShown: true,
+          headerLeft: () => (
+            <IconButton
+              icon="arrow-left"
+              color={Colors.red500}
+              size={20}
+              onPress={() => navigation.navigate('Home')}
+            />
+          ),
         }}
       />
       <RootStack.Screen

@@ -5,18 +5,17 @@
  * @format
  * @flow strict-local
  */
-
+import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import {Text, View} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import RootStackScreen from './src/container/navigations/RootStackScreen';
+import DrawerNavigator from './src/container/navigations/DrawerNavigator';
 
 const App = () => {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <RootStackScreen />
+        <DrawerNavigator />
       </NavigationContainer>
     </SafeAreaProvider>
   );

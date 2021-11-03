@@ -46,7 +46,7 @@ const SignInScreen = ({navigation}) => {
         backgroundColor="#ffffff"
       />
       <View style={styles.header}>
-        <Image source={require('../../assets/logo.png')} />
+        <Image source={require('../../assets/logo.png')} style={styles.image} />
       </View>
       <View style={styles.footer}>
         <View style={styles.section}>
