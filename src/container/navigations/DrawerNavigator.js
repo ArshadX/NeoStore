@@ -3,14 +3,13 @@ import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import RootStackScreen from './RootStackScreen';
 import HomeStackScreen from './HomeStackScreen';
-import DrawerContentbefore from '../screens/DrawerContentbefore';
 import DrawerContentafter from '../screens/DrawerContentafter';
-import SignUpScreen from '../screens/SignUpScreen';
+import SignUpScreen from '../screens/auth/SignUpScreen';
 import AllProduct from '../screens/AllProduct';
 import MyAccount from '../screens/MyAccount';
 import Cart from '../screens/Cart';
 import MyOrders from '../screens/MyOrders';
-
+import {connect} from 'react-redux';
 //Will be move to StackScreens
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {IconButton, Colors} from 'react-native-paper';
@@ -23,18 +22,7 @@ const SignupStackScreen = ({navigation}) => {
         component={SignUpScreen}
         options={{
           title: 'Sign up',
-          headerShown: true,
-          headerStyle: {
-            backgroundColor: '#ffffff',
-          },
-          headerLeft: () => (
-            <IconButton
-              icon="arrow-left"
-              color={Colors.red500}
-              size={20}
-              onPress={() => navigation.navigate('Home')}
-            />
-          ),
+          headerShown: false,
         }}
       />
     </SignupStack.Navigator>
@@ -44,17 +32,11 @@ const SignupStackScreen = ({navigation}) => {
 
 const Drawer = createDrawerNavigator();
 
-const DrawerNavigator = () => {
+const DrawerNavigator = ({userData}) => {
   return (
     <Drawer.Navigator
       initialRouteName="Home"
-      drawerContent={props =>
-        true ? (
-          <DrawerContentbefore {...props} />
-        ) : (
-          <DrawerContentafter {...props} />
-        )
-      }>
+      drawerContent={props => <DrawerContentafter {...props} />}>
       <Drawer.Screen name="Home" component={HomeStackScreen} />
       <Drawer.Screen
         name="Login"
@@ -98,8 +80,20 @@ const DrawerNavigator = () => {
           headerShown: true,
         }}
       />
+      <Drawer.Screen
+        name="SignOut"
+        component={HomeStackScreen}
+        options={{
+          headerShown: true,
+        }}
+      />
     </Drawer.Navigator>
   );
 };
+const mapStateToProps = state => {
+  return {
+    userData: state.user,
+  };
+};
 
-export default DrawerNavigator;
+export default connect(mapStateToProps, null)(DrawerNavigator);

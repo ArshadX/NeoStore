@@ -3,8 +3,8 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {Button, HelperText, TextInput} from 'react-native-paper';
 
-import {styles} from '../../styles/styles';
-import {e} from '../../lib/reg exp/email';
+import {styles} from '../../../styles/styles';
+import {e} from '../../../lib/reg exp/email';
 
 const forgotPassword = ({navigation}) => {
   const [email, setemail] = React.useState('');

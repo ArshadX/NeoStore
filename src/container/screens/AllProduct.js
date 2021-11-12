@@ -8,7 +8,7 @@ const AllProduct = () => {
   return (
     <View style={styles.Container}>
       <View style={styles.header}>
-        <Text style={styles.titleFooter}>Product List</Text>
+        <Text style={styles.titleFooter}></Text>
       </View>
     </View>
   );

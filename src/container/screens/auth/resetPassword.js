@@ -1,12 +1,12 @@
 import React from 'react';
 
-import {styles} from '../../styles/styles';
+import {styles} from '../../../styles/styles';
 import {View, Text} from 'react-native';
 import {TextInput, HelperText, Button} from 'react-native-paper';
 import {
   changePassword,
   changeConfirmPassword,
-} from '../../lib/validation/validation';
+} from '../../../lib/validation/validation';
 
 const resetPassword = () => {
   const [verifyCode, setverifyCode] = React.useState('');

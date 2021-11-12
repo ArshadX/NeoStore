@@ -12,8 +12,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    marginTop: 30,
-    paddingBottom: 20,
+    marginTop: 20,
+    paddingBottom: 2,
   },
   footer: {
     flex: 20,
@@ -39,6 +39,11 @@ export const styles = StyleSheet.create({
     marginBottom: 30,
     marginTop: 15,
   },
+  sectionSignIn: {
+    marginBottom: 10,
+    marginTop: 15,
+  },
+
   textStyle: {
     color: '#000000',
   },
@@ -73,6 +78,11 @@ export const styles = StyleSheet.create({
     marginRight: 10,
     marginLeft: 20,
   },
+  checkboxText3: {
+    fontSize: 15,
+    marginRight: 10,
+    marginLeft: 10,
+  },
   image: {
     width: 100,
     height: 100,
@@ -92,5 +102,14 @@ export const styles = StyleSheet.create({
   },
   button2: {
     marginTop: 20,
+  },
+  containerStyle: {
+    backgroundColor: '#fff',
+    padding: 20,
+    marginLeft: 30,
+    marginRight: 30,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

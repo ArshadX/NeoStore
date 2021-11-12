@@ -1,12 +1,14 @@
 import axios from 'axios';
-
+import {instance} from '../../lib/Instances/Instance';
 import {
   FETCH_USERS_FAILURE,
+  FETCH_USERS_FAILURE2,
   FETCH_USERS_REQUEST,
   FETCH_USERS_SUCCESS,
   SignOut,
   SignUp,
-  fetch_Users_Signup_COMPLETE,
+  fetch_Users_task_COMPLETE,
+  Product_List,
 } from './userTypes';
 
 export const fetchUsersRequest = () => {
@@ -34,15 +36,27 @@ export const fetchUsersFailure = error => {
     payload: error,
   };
 };
+export const fetchUsersFailure2 = error => {
+  return {
+    type: FETCH_USERS_FAILURE2,
+    payload: error,
+  };
+};
 export const signOUT = () => {
   //remove this
   return {
     type: SignOut,
   };
 };
-const fetchUsersSignupComplete = () => {
+const fetchUsersTaskComplete = () => {
   return {
-    type: fetch_Users_Signup_COMPLETE,
+    type: fetch_Users_task_COMPLETE,
+  };
+};
+const fetchProduct = list => {
+  return {
+    type: Product_List,
+    payload: list,
   };
 };
 
@@ -51,18 +65,19 @@ const fetchUsersSignupComplete = () => {
  * @param {login} data
  * @returns repsonse with data
  */
-export const login = data => {
+export const login = (data, redirect) => {
   return dispatch => {
     dispatch(fetchUsersRequest());
-    axios
-      .post('https://nameless-savannah-21991.herokuapp.com/login', data)
+    instance
+      .post(`/login`, data)
       .then(response => {
         const users = response.data;
         dispatch(fetchUsersSuccess(users));
+        redirect();
         console.log(users);
       })
       .catch(error => {
-        const errorMsg = error.message;
+        const errorMsg = error;
         dispatch(fetchUsersFailure(errorMsg));
         console.log(errorMsg);
       });
@@ -76,8 +91,8 @@ export const login = data => {
 export const registerUser = data => {
   return dispatch => {
     dispatch(fetchUsersRequest());
-    axios
-      .post('https://nameless-savannah-21991.herokuapp.com/register', data)
+    instance
+      .post('/register', data)
       .then(response => {
         const users = response.data;
         dispatch(fetchUsersSignup(users));
@@ -85,7 +100,7 @@ export const registerUser = data => {
       })
       .catch(error => {
         const errorMsg = error.message;
-        dispatch(fetchUsersFailure(errorMsg));
+        dispatch(fetchUsersFailure2(errorMsg));
         console.log(errorMsg);
       });
   };
@@ -156,8 +171,28 @@ export const Logout = () => {
  *
  * @action navigate automatically to signin screen
  */
-export const SignupComplete = () => {
+export const taskComplete = () => {
   return dispatch => {
-    dispatch(fetchUsersSignupComplete());
+    dispatch(fetchUsersTaskComplete());
+  };
+};
+
+/**Product list */
+
+export const productList = () => {
+  return dispatch => {
+    dispatch(fetchUsersRequest());
+    instance
+      .get(`/login`, data)
+      .then(response => {
+        const list = response.data;
+        dispatch(fetchProduct(list));
+        console.log(users);
+      })
+      .catch(error => {
+        const errorMsg = error?.message;
+        dispatch(fetchUsersFailure(errorMsg));
+        console.log(errorMsg);
+      });
   };
 };
