@@ -1,80 +1,189 @@
 import React from 'react';
 
-import {View, Text, FlatList, StyleSheet} from 'react-native';
+import {View, Text, FlatList, StyleSheet, Image} from 'react-native';
 import {Avatar, Button, Card, Title} from 'react-native-paper';
 import {styles} from '../../styles/styles';
-import {instance} from '../../lib/Instances/Instance';
+import {instance, imageUrl} from '../../lib/Instances/Instance';
 import {connect} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
 
-const Item = () => {
+const Item = ({image}) => {
   return (
     <View style={itemstyles.flatList}>
-      <Card>
-        <Card.Title
-          title="Card Title"
-          subtitle="Card Subtitle"
-          left={LeftContent}
+      <Card style={itemstyles.cardDesign}>
+        <Image
+          source={{
+            uri: imageUrl + image,
+          }}
+          style={itemstyles.productOfEachCategory}
         />
-        <Card.Content>
-          <Title>Card title</Title>
-          <Paragraph>Card content</Paragraph>
+      </Card>
+    </View>
+  );
+};
+const TopRatedItem = ({image, name, rating, price}) => {
+  return (
+    <View style={itemstyles.flatListTRP}>
+      <Card style={itemstyles.cardDesignTRP}>
+        <Card.Content style={itemstyles.contentTRP}>
+          <Image
+            source={{uri: imageUrl + image}}
+            style={itemstyles.topRatedProducts}
+          />
+          <View style={itemstyles.productInfo}>
+            <Title>{name}</Title>
+            <Text>{price}</Text>
+            <Text>{rating}</Text>
+          </View>
         </Card.Content>
-        <Card.Cover source={{uri: 'https://picsum.photos/700'}} />
-        <Card.Actions>
-          <Button>Cancel</Button>
-          <Button>Ok</Button>
-        </Card.Actions>
       </Card>
     </View>
   );
 };
 const Home = ({navigation, userData}) => {
   const [request, setrequest] = React.useState(false);
-  const [dashboard, setDashboard] = React.useState([]);
-  React.useEffect(() => {
-    setrequest(true);
-    instance
-      .get('/getDashboard', {
-        headers: {Authorization: 'Bearer ' + userData.token},
-      })
-      .then(response => {
-        const list = response.data;
-        setDashboard(list);
-        console.log(list);
-      })
-      .catch(error => {
-        const errormsg = error?.message;
-        console.log(errormsg);
-      });
-  }, []);
+  const [token, settoken] = React.useState('');
+  const [ProductOfEachCategory, setProductOfEachCategory] = React.useState([]);
+  const [TopRatedProducts, setTopRatedProducts] = React.useState([]);
+  useFocusEffect(
+    React.useCallback(() => {
+      const getData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('token');
+          if (value !== null) {
+            const response = await instance.get('/getDashboard', {
+              headers: {
+                Authorization: 'Bearer ' + value,
+              },
+            });
+            const productOfEachCategory = response?.data?.productOfEachCategory;
+            const topRatedProducts = response?.data?.topRatedProducts;
+
+            setProductOfEachCategory(productOfEachCategory);
+            setTopRatedProducts(topRatedProducts);
+            //  console.log(productOfEachCategory);
+            console.log(topRatedProducts);
+          }
+        } catch (e) {
+          // error reading value
+          console.log(e);
+        }
+      };
+      getData();
+    }, []),
+  );
+
   const renderItem = ({item}) => {
     return <Item image={item.image} />;
   };
-  return (
-    <View style={styles.Container}>
-      <Text style={styles.textStyle}>Spiderman Homecoming</Text>
-      <FlatList
-        data={dashboard}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
+  const renderItemToprated = ({item}) => {
+    return (
+      <TopRatedItem
+        image={item.image}
+        name={item.name}
+        price={item.price}
+        rating={item.rating}
       />
+    );
+  };
+
+  return (
+    <View style={itemstyles.Container}>
+      <View style={itemstyles.header}>
+        <FlatList
+          data={ProductOfEachCategory}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          horizontal={true}
+          alwaysBounceHorizontal={true}
+          bounces={true}
+          decelerationRate="fast"
+          snapToAlignment="start"
+          snapToInterval={371}
+        />
+      </View>
+      <View style={itemstyles.footer}>
+        <Text style={styles.textStyle}>Top Product for you</Text>
+        <FlatList
+          data={TopRatedProducts}
+          renderItem={renderItemToprated}
+          keyExtractor={item => item.id}
+          horizontal={false}
+        />
+      </View>
     </View>
   );
 };
 const itemstyles = StyleSheet.create({
-  flatList: {
+  Container: {
+    flex: 1,
+    backgroundColor: '#dcdcdc',
+  },
+  header: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 10,
+    marginTop: 2,
+  },
+  footer: {
+    flex: 2,
+    justifyContent: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+  },
+  flatList: {
+    flex: 1,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
     marginBottom: 10,
-    paddingTop: 7,
-    paddingBottom: 7,
+    paddingTop: 10,
+  },
+  flatListTRP: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 2,
+    paddingBottom: 2,
   },
   cardDesign: {
-    paddingTop: 7,
-    borderRadius: 10,
-    backgroundColor: '#b0e0e6',
+    flex: 1,
+    borderRadius: 7,
+    alignContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#fefefa',
+    marginRight: 2,
     elevation: 5,
+    width: 370,
+    height: 200,
+  },
+  cardDesignTRP: {
+    paddingTop: 2,
+    borderRadius: 10,
+    backgroundColor: '#fefefa',
+    width: 372,
+    elevation: 5,
+  },
+  productOfEachCategory: {
+    alignContent: 'center',
+    width: 71,
+    height: 152,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  topRatedProducts: {
+    width: 31,
+    height: 67,
+    marginRight: 30,
+    marginLeft: 10,
+  },
+  contentTRP: {
+    flexDirection: 'row',
+  },
+  productInfo: {
+    flexDirection: 'column',
+    marginLeft: 10,
   },
   cardAction: {
     flexDirection: 'row-reverse',

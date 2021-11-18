@@ -32,13 +32,13 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isloading: false,
-        users: action.payload,
+        users: action?.payload,
         error: '',
         islogging: true,
         token: action?.payload?.token,
-        msg: action?.payload.message,
-        userID: action?.payload.userId,
-        cartID: action?.payload.cartId,
+        msg: action?.payload?.message,
+        userID: action?.payload?.userId,
+        cartID: action?.payload?.cartId,
       };
     case FETCH_USERS_FAILURE:
       return {
@@ -60,7 +60,6 @@ const reducer = (state = initialState, action) => {
         isloading: false,
         islogging: false,
         users: [],
-        token: '',
       };
     case SignUp:
       return {

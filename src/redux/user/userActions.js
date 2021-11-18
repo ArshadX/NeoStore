@@ -1,5 +1,7 @@
 import axios from 'axios';
 import {instance} from '../../lib/Instances/Instance';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {
   FETCH_USERS_FAILURE,
   FETCH_USERS_FAILURE2,
@@ -69,11 +71,20 @@ export const login = (data, redirect) => {
   return dispatch => {
     dispatch(fetchUsersRequest());
     instance
-      .post(`/login`, data)
+      .post('/login', data)
       .then(response => {
         const users = response.data;
         dispatch(fetchUsersSuccess(users));
         redirect();
+        const setData = async () => {
+          try {
+            await AsyncStorage.setItem('token', users?.token);
+          } catch (e) {
+            //save error
+            console.log(e);
+          }
+        };
+        setData();
         console.log(users);
       })
       .catch(error => {

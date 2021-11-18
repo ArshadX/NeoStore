@@ -1,5 +1,6 @@
 import React from 'react';
 import {styles} from '../../../styles/styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   ScrollView,
   StatusBar,
@@ -36,7 +37,32 @@ const SignInScreen = ({navigation, login, userData, taskComplete}) => {
   const [isBlankpassword, setisBlankpassword] = React.useState(false);
   const [isSecureTextEntry, setisSecureTextEntry] = React.useState(true);
 
-  const redirect = () => navigation.navigate('Home');
+  const redirect = async () => {
+    const firstPair = ['Email', email];
+    const secondPair = ['Password', password];
+    try {
+      await AsyncStorage.multiSet([firstPair, secondPair]);
+    } catch (e) {
+      //save error
+      console.log(e);
+    }
+    getData();
+    navigation.navigate('Home');
+  };
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('Email');
+      if (value !== null) {
+        console.log(value);
+      } else {
+        console.log(value);
+      }
+    } catch (e) {
+      // error reading value
+      console.log('heelo');
+    }
+  };
+
   //validation starts here
   const changeEmail = text => {
     let temp = text.trim();
@@ -93,7 +119,7 @@ const SignInScreen = ({navigation, login, userData, taskComplete}) => {
 
         <Portal>
           <Modal
-            visible={userData.isloading}
+            visible={userData?.isloading}
             contentContainerStyle={styles.containerStyle}>
             <ActivityIndicator
               style={{justifyContent: 'space-around', color: '#000000'}}
@@ -101,7 +127,7 @@ const SignInScreen = ({navigation, login, userData, taskComplete}) => {
             <Text style={styles.textStyle}>loading...</Text>
           </Modal>
           <Modal
-            visible={userData.showModal}
+            visible={userData?.showModal}
             onDismiss={() => taskComplete()}
             contentContainerStyle={styles.containerStyle}>
             <Text style={styles.textStyle}>{userData.error}</Text>
