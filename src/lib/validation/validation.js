@@ -18,7 +18,7 @@ export const passwordValidation = (setisValidPassword, password) => {
   }
 };
 
-export const changeEmail = (text, setEmail, setValidEmail) => {
+export const changeEmail = (text, setEmail, setValidEmail, setisBlankemail) => {
   let temp = text.trim();
   if (temp === '') {
     setValidEmail(true);
@@ -26,10 +26,16 @@ export const changeEmail = (text, setEmail, setValidEmail) => {
   } else {
     setValidEmail(e.test(temp));
     setEmail(temp);
+    setisBlankemail(false);
   }
 };
 
-export const changePassword = (text, setPassword, setValidPassword) => {
+export const changePassword = (
+  text,
+  setPassword,
+  setValidPassword,
+  setisBlankpassword,
+) => {
   let temp = text.trim();
   if (temp === '') {
     setValidPassword(true);
@@ -37,10 +43,11 @@ export const changePassword = (text, setPassword, setValidPassword) => {
   } else {
     setValidPassword(p.test(temp));
     setPassword(temp);
+    setisBlankpassword(false);
   }
 };
 
-export const changeName = (text, setName, setValidName) => {
+export const changeName = (text, setName, setValidName, setisBlankinput) => {
   let temp = text.trim();
   if (temp === '') {
     setValidName(true);
@@ -48,10 +55,11 @@ export const changeName = (text, setName, setValidName) => {
   } else {
     setValidName(name.test(temp));
     setName(temp);
+    setisBlankinput(false);
   }
 };
 
-export const changePhone = (text, setPhone, setValidPhone) => {
+export const changePhone = (text, setPhone, setValidPhone, setIsBlankPhone) => {
   let temp = text.trim();
   if (temp === '') {
     setValidPhone(true);
@@ -59,6 +67,7 @@ export const changePhone = (text, setPhone, setValidPhone) => {
   } else {
     setValidPhone(phoneNum.test(temp));
     setPhone(temp);
+    setIsBlankPhone(false);
   }
 };
 export const changeConfirmPassword = (
@@ -66,6 +75,7 @@ export const changeConfirmPassword = (
   password,
   setValidConfirmPassword,
   setconfirmPassword,
+  setisBlankConfPassword,
 ) => {
   let temp = text.trim();
   if (temp === '') {
@@ -73,5 +83,6 @@ export const changeConfirmPassword = (
   } else {
     setValidConfirmPassword(password == temp);
     setconfirmPassword(temp);
+    setisBlankConfPassword(false);
   }
 };

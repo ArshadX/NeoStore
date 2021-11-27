@@ -1,11 +1,16 @@
 import React from 'react';
 
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, Pressable} from 'react-native';
 
 import {Card, Avatar, Title} from 'react-native-paper';
 
-import {imageUrl} from '../lib/Instances/Instance';
+import {AlertBox} from '../components/AlertBox';
 
+import {imageUrl, instance} from '../lib/Instances/Instance';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Rating} from 'react-native-ratings';
+import {styles} from '../styles/styles';
 export const AllItems = ({image, name, rating, price}) => {
   return (
     <View style={itemstyles.flatListTRP}>
@@ -17,8 +22,14 @@ export const AllItems = ({image, name, rating, price}) => {
           />
           <View style={itemstyles.productInfo}>
             <Title>{name}</Title>
-            <Text>{price}</Text>
-            <Text>{rating}</Text>
+            <Text style={styles.textStyle}>Price: {price}</Text>
+            <Rating
+              count={5}
+              defaultRating={rating}
+              imageSize={15}
+              readonly={true}
+              style={itemstyles.ratingStyle}
+            />
           </View>
         </Card.Content>
       </Card>
@@ -26,12 +37,49 @@ export const AllItems = ({image, name, rating, price}) => {
   );
 };
 
-export const Category = ({item}) => {
+export const Category = ({item, filterOption}) => {
+  const [itemCat, setitemCat] = React.useState([]);
+  const [itemColor, setitemColor] = React.useState([]);
+  const [sorting, setSorting] = React.useState('price');
+  const [orderby, setOrderby] = React.useState('desc');
+
+  const getData = async data => {
+    try {
+      const value = await AsyncStorage.getItem('token');
+      if (value !== null) {
+        const response = await instance.post('/filterCommonProducts', data, {
+          headers: {
+            Authorization: 'Bearer ' + value,
+          },
+        });
+        const filteredItems = response?.data;
+        console.log(filteredItems);
+        console.log(value);
+      }
+    } catch (e) {
+      // error reading value
+      console.log(e);
+    }
+  };
+  const handleSubmit = () => {
+    const data = {
+      categories: [itemCat],
+      colors: [itemColor],
+      sort: {
+        basedOn: sorting,
+        order: orderby,
+      },
+    };
+    getData(data);
+  };
   return (
     <View style={itemstyles.container}>
-      <View style={itemstyles.content}>
-        <Text style={itemstyles.listStyle}>{item}</Text>
-      </View>
+      <Pressable
+        onPress={() => handleSubmit()}
+        style={itemstyles.content}
+        android_ripple={{color: '#dcdcdc', radius: 50}}>
+        <Text style={itemstyles.textStyle}>{item}</Text>
+      </Pressable>
     </View>
   );
 };
@@ -45,11 +93,16 @@ const itemstyles = StyleSheet.create({
     borderColor: '#000000',
     borderRadius: 10,
     marginTop: 7,
-    marginBottom: 5,
+    marginBottom: 7,
     borderWidth: 1,
+    marginRight: 10,
+    marginLeft: 5,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 8,
+    paddingTop: 8,
   },
   listStyle: {
-    color: '#000000',
     paddingBottom: 7,
     paddingTop: 7,
     marginLeft: 40,
@@ -82,5 +135,12 @@ const itemstyles = StyleSheet.create({
     height: 67,
     marginRight: 30,
     marginLeft: 10,
+  },
+  ratingStyle: {
+    flexDirection: 'row',
+    width: 80,
+  },
+  textStyle: {
+    color: '#000000',
   },
 });

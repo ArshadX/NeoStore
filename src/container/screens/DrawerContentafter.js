@@ -6,7 +6,7 @@ import {Title, Caption, Drawer, Button} from 'react-native-paper';
 import {styles} from '../../styles/styles';
 import {connect} from 'react-redux';
 import {Logout} from '../../redux/user/userActions';
-const DrawerContentafter = ({navigation, Logout, userData}) => {
+const DrawerContentafter = ({navigation, Logout}) => {
   return (
     <View style={styles.Container}>
       <DrawerContentScrollView>
@@ -20,59 +20,43 @@ const DrawerContentafter = ({navigation, Logout, userData}) => {
               label="Home"
               onPress={() => navigation.navigate('Home')}
             />
-            {userData.islogging ? (
-              <Drawer.Item
-                icon="account"
-                label="My Account"
-                onPress={() => navigation.navigate('MyAccount')}
-              />
-            ) : (
-              <Drawer.Item
-                icon="login"
-                label="Log in"
-                onPress={() => navigation.navigate('Login')}
-              />
-            )}
-            {userData.islogging ? (
-              <Drawer.Item
-                icon="cart"
-                label="Cart"
-                onPress={() => navigation.navigate('Cart')}
-              />
-            ) : (
-              <Drawer.Item
-                icon="account-plus"
-                label="Sign up"
-                onPress={() => navigation.navigate('Signup')}
-              />
-            )}
+
+            <Drawer.Item
+              icon="account"
+              label="My Account"
+              onPress={() => navigation.navigate('MyAccount')}
+            />
+
+            <Drawer.Item
+              icon="cart"
+              label="Cart"
+              onPress={() => navigation.navigate('Cart')}
+            />
+
             <Drawer.Item
               icon="shopping-search"
               label="All Products"
               onPress={() => navigation.navigate('allProduct')}
             />
 
-            {userData.islogging ? (
-              <Drawer.Item
-                icon="truck-fast-outline"
-                label="My Orders"
-                onPress={() => navigation.navigate('MyOrder')}
-              />
-            ) : null}
+            <Drawer.Item
+              icon="truck-fast-outline"
+              label="My Orders"
+              onPress={() => navigation.navigate('MyOrder')}
+            />
+
             <Drawer.Item icon="map-marker-multiple" label="Store Locator" />
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>
-      {userData.islogging ? (
-        <Drawer.Item
-          icon="logout"
-          label="Sign out"
-          onPress={() => {
-            Logout();
-            return navigation.navigate('Home');
-          }}
-        />
-      ) : null}
+
+      <Drawer.Item
+        icon="logout"
+        label="Sign out"
+        onPress={() => {
+          Logout();
+        }}
+      />
     </View>
   );
 };

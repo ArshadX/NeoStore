@@ -1,16 +1,7 @@
 import React from 'react';
 import {styles} from '../../../styles/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-  Image,
-  ActivityIndicator,
-} from 'react-native';
+import {StatusBar, Text, View, Image, ActivityIndicator} from 'react-native';
 import {
   HelperText,
   TextInput,
@@ -18,7 +9,6 @@ import {
   Modal,
   Portal,
   Provider,
-  Appbar,
 } from 'react-native-paper';
 import {connect} from 'react-redux';
 import {login, taskComplete} from '../../../redux/user/userActions';
@@ -36,7 +26,27 @@ const SignInScreen = ({navigation, login, userData, taskComplete}) => {
   const [isBlankemail, setisBlankemail] = React.useState(false);
   const [isBlankpassword, setisBlankpassword] = React.useState(false);
   const [isSecureTextEntry, setisSecureTextEntry] = React.useState(true);
-
+  React.useEffect(() => {
+    const getData = async () => {
+      try {
+        const emailValue = await AsyncStorage.getItem('Email');
+        const passwordValue = await AsyncStorage.getItem('Password');
+        if (emailValue !== null) {
+          login({
+            email: emailValue,
+            password: passwordValue,
+          });
+          console.log(emailValue);
+        } else {
+          console.log(passwordValue);
+        }
+      } catch (e) {
+        // error reading value
+        console.log('heelo');
+      }
+    };
+    getData();
+  }, []);
   const redirect = async () => {
     const firstPair = ['Email', email];
     const secondPair = ['Password', password];
@@ -45,21 +55,6 @@ const SignInScreen = ({navigation, login, userData, taskComplete}) => {
     } catch (e) {
       //save error
       console.log(e);
-    }
-    getData();
-    navigation.navigate('Home');
-  };
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('Email');
-      if (value !== null) {
-        console.log(value);
-      } else {
-        console.log(value);
-      }
-    } catch (e) {
-      // error reading value
-      console.log('heelo');
     }
   };
 
@@ -96,13 +91,11 @@ const SignInScreen = ({navigation, login, userData, taskComplete}) => {
       const form = new FormData();
       form.append('email', email);
       form.append('password', password);
-      login(
-        {
-          email: email,
-          password: password,
-        },
-        redirect,
-      );
+      redirect();
+      login({
+        email: email,
+        password: password,
+      });
       console.log('login');
     }
   };
@@ -133,18 +126,7 @@ const SignInScreen = ({navigation, login, userData, taskComplete}) => {
             <Text style={styles.textStyle}>{userData.error}</Text>
           </Modal>
         </Portal>
-        <Appbar.Header style={styles.statusBar}>
-          <Appbar.BackAction
-            onPress={() => {
-              setemail('');
-              setpassword('');
-              setisValidEmail(true);
-              setisValidPassword(true);
-              return navigation.goBack();
-            }}
-          />
-          <Appbar.Content title="Go back!" />
-        </Appbar.Header>
+
         <View style={styles.header}>
           <Image
             source={require('../../../assets/logo.png')}

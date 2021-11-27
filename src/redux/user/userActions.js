@@ -67,7 +67,7 @@ const fetchProduct = list => {
  * @param {login} data
  * @returns repsonse with data
  */
-export const login = (data, redirect) => {
+export const login = data => {
   return dispatch => {
     dispatch(fetchUsersRequest());
     instance
@@ -75,16 +75,6 @@ export const login = (data, redirect) => {
       .then(response => {
         const users = response.data;
         dispatch(fetchUsersSuccess(users));
-        redirect();
-        const setData = async () => {
-          try {
-            await AsyncStorage.setItem('token', users?.token);
-          } catch (e) {
-            //save error
-            console.log(e);
-          }
-        };
-        setData();
         console.log(users);
       })
       .catch(error => {
@@ -173,6 +163,15 @@ export const recoverPassword = data => {
  * @action logout from drawer
  */
 export const Logout = () => {
+  const removeFew = async () => {
+    const keys = ['Email', 'Password'];
+    try {
+      await AsyncStorage.multiRemove(keys);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  removeFew();
   return dispatch => {
     dispatch(signOUT());
   };

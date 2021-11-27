@@ -1,12 +1,19 @@
 import React from 'react';
 
-import {View, Text, FlatList, StyleSheet, Image} from 'react-native';
-import {Avatar, Button, Card, Title} from 'react-native-paper';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Image,
+  KeyboardAvoidingView,
+} from 'react-native';
+import {Card, Title, Searchbar} from 'react-native-paper';
 import {styles} from '../../styles/styles';
 import {instance, imageUrl} from '../../lib/Instances/Instance';
 import {connect} from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
+import {Rating} from 'react-native-ratings';
 
 const Item = ({image}) => {
   return (
@@ -33,8 +40,14 @@ const TopRatedItem = ({image, name, rating, price}) => {
           />
           <View style={itemstyles.productInfo}>
             <Title>{name}</Title>
-            <Text>{price}</Text>
-            <Text>{rating}</Text>
+            <Text style={styles.textStyle}>Price: {price}</Text>
+            <Rating
+              count={5}
+              defaultRating={rating}
+              imageSize={15}
+              readonly={true}
+              style={itemstyles.ratingStyle}
+            />
           </View>
         </Card.Content>
       </Card>
@@ -50,7 +63,7 @@ const Home = ({navigation, userData}) => {
     React.useCallback(() => {
       const getData = async () => {
         try {
-          const value = await AsyncStorage.getItem('token');
+          const value = await userData.token;
           if (value !== null) {
             const response = await instance.get('/getDashboard', {
               headers: {
@@ -90,27 +103,27 @@ const Home = ({navigation, userData}) => {
 
   return (
     <View style={itemstyles.Container}>
-      <View style={itemstyles.header}>
-        <FlatList
-          data={ProductOfEachCategory}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          horizontal={true}
-          alwaysBounceHorizontal={true}
-          bounces={true}
-          decelerationRate="fast"
-          snapToAlignment="start"
-          snapToInterval={371}
-        />
-      </View>
+      <Searchbar placeholder="Search" style={itemstyles.searchbar} />
       <View style={itemstyles.footer}>
-        <Text style={styles.textStyle}>Top Product for you</Text>
-        <FlatList
-          data={TopRatedProducts}
-          renderItem={renderItemToprated}
-          keyExtractor={item => item.id}
-          horizontal={false}
-        />
+        <KeyboardAvoidingView enabled={false}>
+          <FlatList
+            data={ProductOfEachCategory}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            horizontal={true}
+            decelerationRate="fast"
+            snapToInterval={371}
+            showsHorizontalScrollIndicator={true}
+          />
+
+          <Text style={styles.textStyle}>Top Product for you</Text>
+          <FlatList
+            data={TopRatedProducts}
+            renderItem={renderItemToprated}
+            keyExtractor={item => item.id}
+            horizontal={false}
+          />
+        </KeyboardAvoidingView>
       </View>
     </View>
   );
@@ -120,22 +133,16 @@ const itemstyles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#dcdcdc',
   },
-  header: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 10,
-    marginTop: 2,
-  },
   footer: {
-    flex: 2,
     justifyContent: 'flex-start',
     paddingHorizontal: 10,
     paddingVertical: 7,
   },
+  searchbar: {
+    marginHorizontal: 10,
+    marginVertical: 5,
+  },
   flatList: {
-    flex: 1,
-    flexWrap: 'wrap',
     justifyContent: 'center',
     marginBottom: 10,
     paddingTop: 10,
@@ -148,7 +155,6 @@ const itemstyles = StyleSheet.create({
     paddingBottom: 2,
   },
   cardDesign: {
-    flex: 1,
     borderRadius: 7,
     alignContent: 'space-around',
     alignItems: 'center',
@@ -234,6 +240,10 @@ const itemstyles = StyleSheet.create({
     paddingTop: 7,
     elevation: 5,
     borderRadius: 7,
+  },
+  ratingStyle: {
+    flexDirection: 'row',
+    width: 80,
   },
 });
 const mapStateToProps = state => {

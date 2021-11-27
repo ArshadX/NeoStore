@@ -186,7 +186,12 @@ const SignUpScreen = ({navigation, registerUser, userData, taskComplete}) => {
                   dense={true}
                   style={styles.textInputStyle}
                   onChangeText={text =>
-                    changeName(text, setfirstName, setValidfirstName)
+                    changeName(
+                      text,
+                      setfirstName,
+                      setValidfirstName,
+                      setisBlankfname,
+                    )
                   }
                 />
                 <HelperText
@@ -208,7 +213,12 @@ const SignUpScreen = ({navigation, registerUser, userData, taskComplete}) => {
                   dense={true}
                   style={styles.textInputStyle}
                   onChangeText={text =>
-                    changeName(text, setlastName, setValidlastName)
+                    changeName(
+                      text,
+                      setlastName,
+                      setValidlastName,
+                      setisBlanklname,
+                    )
                   }
                 />
                 <HelperText
@@ -230,7 +240,7 @@ const SignUpScreen = ({navigation, registerUser, userData, taskComplete}) => {
                   dense={true}
                   style={styles.textInputStyle}
                   onChangeText={text =>
-                    changeEmail(text, setEmail, setValidEmail)
+                    changeEmail(text, setEmail, setValidEmail, setisBlankemail)
                   }
                 />
                 <HelperText
@@ -251,7 +261,7 @@ const SignUpScreen = ({navigation, registerUser, userData, taskComplete}) => {
                   placeholder="Ex. 12345..."
                   dense={true}
                   onChangeText={text =>
-                    changePhone(text, setPhone, setValidPhone)
+                    changePhone(text, setPhone, setValidPhone, setisBlankphone)
                   }
                   style={styles.textInputStyle}
                 />
@@ -273,7 +283,12 @@ const SignUpScreen = ({navigation, registerUser, userData, taskComplete}) => {
                   dense={true}
                   style={styles.textInputStyle}
                   onChangeText={text =>
-                    changePassword(text, setPassword, setValidPassword)
+                    changePassword(
+                      text,
+                      setPassword,
+                      setValidPassword,
+                      setisBlankpassword,
+                    )
                   }
                   secureTextEntry={isSecureTextEntry}
                   left={<TextInput.Icon name="lock" />}
@@ -320,6 +335,7 @@ const SignUpScreen = ({navigation, registerUser, userData, taskComplete}) => {
                       password,
                       setValidConfirmPassword,
                       setconfirmPassword,
+                      setisBlankConfPassword,
                     )
                   }
                   secureTextEntry={isSecureTextEntry2}

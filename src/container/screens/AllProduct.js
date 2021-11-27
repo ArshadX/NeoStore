@@ -8,15 +8,15 @@ import {
   Provider,
   Portal,
   Modal,
+  Appbar,
 } from 'react-native-paper';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {instance} from '../../lib/Instances/Instance';
 import {AllItems, Category} from '../../components/Filter';
 import {useFocusEffect} from '@react-navigation/native';
+import {connect} from 'react-redux';
 
-const AllProduct = () => {
+const AllProduct = ({userData, navigation}) => {
   const [AllCategories, setallCategories] = React.useState([]);
   const [CommonProducts, setcommonProducts] = React.useState([]);
   const [AllColors, setallColors] = React.useState([]);
@@ -25,12 +25,13 @@ const AllProduct = () => {
   const [VisibleColor, setVisibleColor] = React.useState(false);
   const [VisiblePrice, setVisiblePrice] = React.useState(false);
   const [VisibleRating, setVisibleRating] = React.useState(false);
+  const [filterOpt, setfilterOpt] = React.useState('');
 
   useFocusEffect(
     React.useCallback(() => {
       const getData = async () => {
         try {
-          const value = await AsyncStorage.getItem('token');
+          const value = await userData.token;
           if (value !== null) {
             const response = await instance.get('/commonProducts', {
               headers: {
@@ -66,13 +67,17 @@ const AllProduct = () => {
       />
     );
   };
-  const renderCategory = ({item}) => {
-    return <Category item={item} />;
+  const renderCategory = ({item, index}) => {
+    return <Category item={item} index={index} filterOption={filterOpt} />;
   };
   return (
     <Provider>
       <View style={itemstyles.Container}>
         {/** filter option show */}
+        <Appbar.Header style={itemstyles.appbar}>
+          <Appbar.BackAction onPress={() => navigation.goBack()} />
+          <Appbar.Content title="Product List" subtitle="All Product" />
+        </Appbar.Header>
         <Portal>
           <Modal
             visible={VisibleCat}
@@ -101,7 +106,9 @@ const AllProduct = () => {
             <FlatList
               data={AllColors}
               renderItem={renderCategory}
-              showsVerticalScrollIndicator={false}
+              showsVerticalScrollIndicator={true}
+              initialNumToRender={5}
+              persistentScrollbar={true}
             />
           </Modal>
           <Modal
@@ -137,16 +144,19 @@ const AllProduct = () => {
             data={CommonProducts}
             renderItem={renderItem}
             keyExtractor={item => item.id}
-            horizontal={false}
           />
         </View>
+        {/**filter bar  */}
         <View style={itemstyles.footer}>
           <View style={itemstyles.filterbar}>
             <Button
               icon="filter"
               mode="outlined"
               compact={true}
-              onPress={() => setVisibleCat(true)}
+              onPress={() => {
+                setfilterOpt('category');
+                setVisibleCat(true);
+              }}
               style={itemstyles.button}
               labelStyle={itemstyles.buttonContent}>
               <Text>Category</Text>
@@ -155,7 +165,10 @@ const AllProduct = () => {
               icon="format-color-fill"
               mode="outlined"
               compact={true}
-              onPress={() => setVisibleColor(true)}
+              onPress={() => {
+                setfilterOpt('color');
+                setVisibleColor(true);
+              }}
               style={itemstyles.button}
               labelStyle={itemstyles.buttonContent}>
               <Text>Color</Text>
@@ -164,7 +177,10 @@ const AllProduct = () => {
               icon="tag"
               mode="outlined"
               compact={true}
-              onPress={() => setVisiblePrice(true)}
+              onPress={() => {
+                setfilterOpt('price');
+                setVisiblePrice(true);
+              }}
               style={itemstyles.button}
               labelStyle={itemstyles.buttonContent}>
               <Text>Price</Text>
@@ -173,7 +189,10 @@ const AllProduct = () => {
               icon="star"
               mode="outlined"
               compact={true}
-              onPress={() => setVisibleRating(true)}
+              onPress={() => {
+                setfilterOpt('rating');
+                setVisibleRating(true);
+              }}
               style={itemstyles.button}
               labelStyle={itemstyles.buttonContent}>
               <Text>Rating</Text>
@@ -189,6 +208,9 @@ const itemstyles = StyleSheet.create({
   Container: {
     flex: 1,
     backgroundColor: '#dcdcdc',
+  },
+  appbar: {
+    backgroundColor: '#fefefa',
   },
   header: {
     flex: 9,
@@ -223,11 +245,13 @@ const itemstyles = StyleSheet.create({
   containerStyle: {
     alignItems: 'center',
     backgroundColor: '#fefefa',
-    padding: 20,
-    paddingTop: 2,
+    paddingTop: 0,
+    paddingBottom: 20,
+    paddingLeft: 10,
+    paddingRight: 10,
     marginLeft: 70,
     marginRight: 90,
-    marginBottom: 100,
+    marginBottom: 220,
     borderRadius: 15,
   },
   buttonContent: {fontSize: 10, color: '#000000'},
@@ -235,4 +259,9 @@ const itemstyles = StyleSheet.create({
     marginRight: 200,
   },
 });
-export default AllProduct;
+const mapStateToProps = state => {
+  return {
+    userData: state.user,
+  };
+};
+export default connect(mapStateToProps, null)(AllProduct);

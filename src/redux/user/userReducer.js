@@ -59,7 +59,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         isloading: false,
         islogging: false,
+        token: '',
         users: [],
+        userID: '',
+        cartID: '',
+        msg: '',
       };
     case SignUp:
       return {

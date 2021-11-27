@@ -16,17 +16,7 @@ const RootStackScreen = ({navigation}) => {
         name="SignIn"
         component={SignInScreen}
         options={{
-          title: 'Sign In',
           headerShown: false,
-
-          /*  headerLeft: () => (
-            <IconButton
-              icon="arrow-left"
-              color={Colors.red500}
-              size={20}
-              onPress={() => navigation.navigate('Home')}
-            />
-          ),*/
         }}
       />
       <RootStack.Screen
