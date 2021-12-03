@@ -2,10 +2,10 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Arrow = ({distance}) => {
+const Arrow = ({distance, arrowType}) => {
   return (
     <Icon
-      name="chevron-right"
+      name={arrowType}
       size={30}
       color="#000000"
       style={styles.rightStyle}

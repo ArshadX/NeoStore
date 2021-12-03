@@ -403,7 +403,11 @@ const SignUpScreen = ({navigation, registerUser, userData, taskComplete}) => {
                   SignUp
                 </Button>
                 <Text style={styles.textStyle}>Already have an acoount?</Text>
-                <Text style={styles.linkText}>Log In</Text>
+                <Text
+                  style={styles.linkText}
+                  onPress={() => navigation.navigate('SignIn')}>
+                  Log In
+                </Text>
               </View>
             </ScrollView>
           </KeyboardAvoidingView>

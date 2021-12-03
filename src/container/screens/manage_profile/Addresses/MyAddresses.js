@@ -1,11 +1,70 @@
+import {useFocusEffect} from '@react-navigation/native';
 import React from 'react';
-import {Text, View, StyleSheet, StatusBar, Pressable} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  Text,
+  View,
+  StyleSheet,
+  StatusBar,
+  Pressable,
+  FlatList,
+} from 'react-native';
 import Appbar from '../../../../components/Appbar';
 import Arrow from '../../../../components/Arrow';
-const MyAddresses = ({navigation}) => {
+import CustomModal from '../../../../components/CustomModal';
+import {instance} from '../../../../lib/Instances/Instance';
+import {connect} from 'react-redux';
+import {AlertProfileUpdate} from '../../../../components/AlertBox';
+import CustomFlatlist from '../../../../components/CustomFlatlist';
+const MyAddresses = ({navigation, userData}) => {
+  const [showModal, setShowModal] = React.useState(false);
+  const [AddressList, setAddressList] = React.useState([]);
+  useFocusEffect(
+    React.useCallback(() => {
+      const getData = async () => {
+        try {
+          const value = await userData.token;
+          if (value !== null) {
+            setShowModal(true);
+            const response = await instance.get('/getCustAddress', {
+              headers: {
+                Authorization: 'Bearer ' + value,
+              },
+            });
+            setShowModal(false);
+            const list = response?.data?.Addresses;
+            setAddressList(list);
+            console.log(list);
+          }
+        } catch (e) {
+          // error reading value
+          console.log(e);
+          setShowModal(false);
+          AlertProfileUpdate('Request failed!', ' try again');
+        }
+      };
+      getData();
+    }, []),
+  );
+  const renderItem = ({item}) => {
+    return (
+      <CustomFlatlist
+        address={item.address}
+        city={item.city}
+        pincode={item.pincode}
+        state={item.state}
+        country={item.country}
+        id={item._id}
+        navigation={navigation}
+      />
+    );
+  };
   return (
     <View style={styles.container}>
+      <CustomModal
+        text="loading..."
+        loadingIndicator={true}
+        visible={showModal}
+      />
       <StatusBar barStyle="dark-content" backgroundColor="#6495ed" />
       <Appbar
         title="Back"
@@ -19,11 +78,19 @@ const MyAddresses = ({navigation}) => {
           style={styles.button}
           onPress={() => navigation.navigate('addAdress')}>
           <Text style={styles.textStyle}>Add a new address</Text>
-          <Arrow />
+          <Arrow arrowType="chevron-right" />
         </Pressable>
-        <View style={styles.ViewAddress}>
-          <Text style={styles.titleMedium}>Personal Addresses</Text>
-        </View>
+      </View>
+      <View style={styles.ViewAddress}>
+        <Text style={styles.titleMedium}>Personal Addresses</Text>
+        <FlatList
+          data={AddressList}
+          renderItem={renderItem}
+          keyExtractor={item => item._id}
+          scrollEnabled={true}
+          alwaysBounceVertical={true}
+          progressViewOffset={10}
+        />
       </View>
     </View>
   );
@@ -32,8 +99,7 @@ const MyAddresses = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexWrap: 'wrap',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fefefa',
   },
   title: {
     color: '#000000',
@@ -46,9 +112,10 @@ const styles = StyleSheet.create({
     fontFamily: 'serif',
     fontSize: 14,
     fontWeight: 'bold',
+    marginBottom: 10,
   },
   contentView: {
-    marginHorizontal: 10,
+    marginHorizontal: 7,
     marginTop: 15,
   },
   button: {
@@ -65,8 +132,17 @@ const styles = StyleSheet.create({
     fontFamily: 'serif',
   },
   ViewAddress: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 10,
   },
 });
 
-export default MyAddresses;
+const mapStateToProps = state => {
+  return {
+    userData: state.user,
+  };
+};
+
+export default connect(mapStateToProps, null)(MyAddresses);

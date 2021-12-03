@@ -14,7 +14,7 @@ import MyAddresses from '../screens/manage_profile/Addresses/MyAddresses';
 import ResetPasswordfromAccount from '../screens/manage_profile/ResetPasswordfromAccount';
 
 import AddAddresses from '../screens/manage_profile/Addresses/AddAddresses';
-
+import EditAddress from '../screens/manage_profile/Addresses/EditAddress';
 const RootStack = createNativeStackNavigator();
 
 const AccountNavigation = () => {
@@ -58,6 +58,11 @@ const AccountNavigation = () => {
       <RootStack.Screen
         name="addAdress"
         component={AddAddresses}
+        options={{headerShown: false}}
+      />
+      <RootStack.Screen
+        name="EditAddress"
+        component={EditAddress}
         options={{headerShown: false}}
       />
       <RootStack.Screen

@@ -1,5 +1,5 @@
+import {useFocusEffect} from '@react-navigation/native';
 import React from 'react';
-
 import {
   View,
   Text,
@@ -7,13 +7,16 @@ import {
   StyleSheet,
   Image,
   KeyboardAvoidingView,
+  Pressable,
 } from 'react-native';
 import {Card, Title, Searchbar} from 'react-native-paper';
 import {styles} from '../../styles/styles';
 import {instance, imageUrl} from '../../lib/Instances/Instance';
 import {connect} from 'react-redux';
-import {useFocusEffect} from '@react-navigation/native';
+
 import {Rating} from 'react-native-ratings';
+import {SwiperFlatList} from 'react-native-swiper-flatlist';
+import Appbar from '../../components/Appbar';
 
 const Item = ({image}) => {
   return (
@@ -29,28 +32,32 @@ const Item = ({image}) => {
     </View>
   );
 };
-const TopRatedItem = ({image, name, rating, price}) => {
+const TopRatedItem = ({image, name, rating, price, id, navigation}) => {
   return (
     <View style={itemstyles.flatListTRP}>
-      <Card style={itemstyles.cardDesignTRP}>
-        <Card.Content style={itemstyles.contentTRP}>
-          <Image
-            source={{uri: imageUrl + image}}
-            style={itemstyles.topRatedProducts}
-          />
-          <View style={itemstyles.productInfo}>
-            <Title>{name}</Title>
-            <Text style={styles.textStyle}>Price: {price}</Text>
-            <Rating
-              count={5}
-              defaultRating={rating}
-              imageSize={15}
-              readonly={true}
-              style={itemstyles.ratingStyle}
+      <Pressable
+        android_ripple={{radius: 190, foreground: true}}
+        onPress={() => navigation.navigate('productDetails', {id: id})}>
+        <Card style={itemstyles.cardDesignTRP}>
+          <Card.Content style={itemstyles.contentTRP}>
+            <Image
+              source={{uri: imageUrl + image}}
+              style={itemstyles.topRatedProducts}
             />
-          </View>
-        </Card.Content>
-      </Card>
+            <View style={itemstyles.productInfo}>
+              <Title>{name}</Title>
+              <Text style={styles.textStyle}>Price: {price}</Text>
+              <Rating
+                count={5}
+                defaultRating={rating}
+                imageSize={15}
+                readonly={true}
+                style={itemstyles.ratingStyle}
+              />
+            </View>
+          </Card.Content>
+        </Card>
+      </Pressable>
     </View>
   );
 };
@@ -76,7 +83,7 @@ const Home = ({navigation, userData}) => {
             setProductOfEachCategory(productOfEachCategory);
             setTopRatedProducts(topRatedProducts);
             //  console.log(productOfEachCategory);
-            console.log(topRatedProducts);
+            console.log(response?.data);
           }
         } catch (e) {
           // error reading value
@@ -97,33 +104,46 @@ const Home = ({navigation, userData}) => {
         name={item.name}
         price={item.price}
         rating={item.rating}
+        id={item.id}
+        navigation={navigation}
       />
     );
   };
-
   return (
     <View style={itemstyles.Container}>
+      <Appbar
+        leftIcon="menu"
+        backgroundColor="#ffffff"
+        onPressIcon={() => navigation.openDrawer()}
+        title="Home"
+      />
       <Searchbar placeholder="Search" style={itemstyles.searchbar} />
       <View style={itemstyles.footer}>
-        <KeyboardAvoidingView enabled={false}>
-          <FlatList
-            data={ProductOfEachCategory}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-            horizontal={true}
-            decelerationRate="fast"
-            snapToInterval={371}
-            showsHorizontalScrollIndicator={true}
-          />
+        <SwiperFlatList
+          autoplay
+          autoplayDelay={2}
+          autoplayLoop
+          showPagination
+          paginationActiveColor="#000000"
+          paginationStyle={itemstyles.dotsView}
+          paginationStyleItem={itemstyles.dots}
+          data={ProductOfEachCategory}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          horizontal={true}
+          decelerationRate="fast"
+          snapToInterval={371}
+        />
+      </View>
+      <View style={itemstyles.toprated}>
+        <Text style={styles.textStyle}>Top Product for you</Text>
 
-          <Text style={styles.textStyle}>Top Product for you</Text>
-          <FlatList
-            data={TopRatedProducts}
-            renderItem={renderItemToprated}
-            keyExtractor={item => item.id}
-            horizontal={false}
-          />
-        </KeyboardAvoidingView>
+        <FlatList
+          data={TopRatedProducts}
+          renderItem={renderItemToprated}
+          keyExtractor={item => item.id}
+          scrollEnabled={true}
+        />
       </View>
     </View>
   );
@@ -133,8 +153,13 @@ const itemstyles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#dcdcdc',
   },
+  toprated: {
+    flex: 5,
+    flexWrap: 'wrap',
+    marginHorizontal: 10,
+    marginVertical: 10,
+  },
   footer: {
-    justifyContent: 'flex-start',
     paddingHorizontal: 10,
     paddingVertical: 7,
   },
@@ -148,10 +173,8 @@ const itemstyles = StyleSheet.create({
     paddingTop: 10,
   },
   flatListTRP: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 2,
+    marginTop: 2,
+    marginBottom: 5,
     paddingBottom: 2,
   },
   cardDesign: {
@@ -244,6 +267,13 @@ const itemstyles = StyleSheet.create({
   ratingStyle: {
     flexDirection: 'row',
     width: 80,
+  },
+  dotsView: {
+    marginBottom: 10,
+  },
+  dots: {
+    width: 6,
+    height: 6,
   },
 });
 const mapStateToProps = state => {

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 10,
-    elevation: 5,
+    elevation: 1,
     width: Dimensions.get('window').width,
   },
   appbartext: {

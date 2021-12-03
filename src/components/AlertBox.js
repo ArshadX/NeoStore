@@ -7,7 +7,7 @@ export const AlertBox = () =>
     {text: 'OK', onPress: () => console.log('OK Pressed')},
   ]);
 
-export const AlertProfileUpdate = data =>
-  Alert.alert('Warning!', data, [
+export const AlertProfileUpdate = (title, details) =>
+  Alert.alert(title, details, [
     {text: 'OK', onPress: () => console.log('OK Pressed')},
   ]);

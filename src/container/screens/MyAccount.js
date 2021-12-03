@@ -122,7 +122,7 @@ const MyAccount = ({userData, navigation}) => {
           onPress={() => navigation.navigate('ordersfromAccount')}>
           <Icon name="receipt" size={30} color="#000000" />
           <Text style={AccountStyle.list}>Order History</Text>
-          <Arrow distance={310} />
+          <Arrow distance={310} arrowType="chevron-right" />
         </Pressable>
         <Pressable
           style={({pressed}) => [
@@ -132,7 +132,7 @@ const MyAccount = ({userData, navigation}) => {
           onPress={() => navigation.navigate('cartfromAccount')}>
           <Icon name="cart" size={30} color="#000000" />
           <Text style={AccountStyle.list}>Cart</Text>
-          <Arrow distance={310} />
+          <Arrow distance={310} arrowType="chevron-right" />
         </Pressable>
         <Pressable
           style={({pressed}) => [
@@ -142,7 +142,7 @@ const MyAccount = ({userData, navigation}) => {
           onPress={() => navigation.navigate('Address')}>
           <Icon name="map-marker" size={30} color="#000000" />
           <Text style={AccountStyle.list}>Shipping Address</Text>
-          <Arrow distance={310} />
+          <Arrow distance={310} arrowType="chevron-right" />
         </Pressable>
         <Pressable
           style={({pressed}) => [
@@ -152,7 +152,7 @@ const MyAccount = ({userData, navigation}) => {
           onPress={() => navigation.navigate('updateProfile')}>
           <Icon name="account-box" size={30} color="#000000" />
           <Text style={AccountStyle.list}>Edit Profile</Text>
-          <Arrow distance={310} />
+          <Arrow distance={310} arrowType="chevron-right" />
         </Pressable>
         <Pressable
           style={({pressed}) => [
@@ -162,7 +162,7 @@ const MyAccount = ({userData, navigation}) => {
           onPress={() => navigation.navigate('resetPasswordfromAccount')}>
           <Icon name="lock-reset" size={30} color="#000000" />
           <Text style={AccountStyle.list}>Reset Password</Text>
-          <Arrow distance={310} />
+          <Arrow distance={310} arrowType="chevron-right" />
         </Pressable>
       </View>
     </View>

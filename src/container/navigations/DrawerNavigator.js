@@ -20,7 +20,11 @@ const DrawerNavigator = () => {
     <Drawer.Navigator
       initialRouteName="Home"
       drawerContent={props => <DrawerContentafter {...props} />}>
-      <Drawer.Screen name="Home" component={HomeStackScreen} />
+      <Drawer.Screen
+        name="Home"
+        component={HomeStackScreen}
+        options={{headerShown: false}}
+      />
 
       <Drawer.Screen
         name="MyAccount"

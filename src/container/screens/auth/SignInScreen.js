@@ -155,7 +155,6 @@ const SignInScreen = ({navigation, login, userData, taskComplete}) => {
               mode="outlined"
               label="Password"
               value={password}
-              value={password}
               error={!isValidPassword}
               placeholder="password..."
               onChangeText={text => changePassword(text)}
