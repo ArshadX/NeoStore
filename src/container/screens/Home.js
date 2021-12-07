@@ -1,19 +1,11 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  Image,
-  KeyboardAvoidingView,
-  Pressable,
-} from 'react-native';
+import {View, Text, FlatList, StyleSheet, Image, Pressable} from 'react-native';
 import {Card, Title, Searchbar} from 'react-native-paper';
 import {styles} from '../../styles/styles';
 import {instance, imageUrl} from '../../lib/Instances/Instance';
 import {connect} from 'react-redux';
-
+import CustomModal from '../../components/CustomModal';
 import {Rating} from 'react-native-ratings';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import Appbar from '../../components/Appbar';
@@ -62,7 +54,7 @@ const TopRatedItem = ({image, name, rating, price, id, navigation}) => {
   );
 };
 const Home = ({navigation, userData}) => {
-  const [request, setrequest] = React.useState(false);
+  const [isloading, setisloading] = React.useState(false);
   const [token, settoken] = React.useState('');
   const [ProductOfEachCategory, setProductOfEachCategory] = React.useState([]);
   const [TopRatedProducts, setTopRatedProducts] = React.useState([]);
@@ -70,6 +62,7 @@ const Home = ({navigation, userData}) => {
     React.useCallback(() => {
       const getData = async () => {
         try {
+          setisloading(true);
           const value = await userData.token;
           if (value !== null) {
             const response = await instance.get('/getDashboard', {
@@ -84,10 +77,12 @@ const Home = ({navigation, userData}) => {
             setTopRatedProducts(topRatedProducts);
             //  console.log(productOfEachCategory);
             console.log(response?.data);
+            setisloading(false);
           }
         } catch (e) {
           // error reading value
           console.log(e);
+          setisloading(false);
         }
       };
       getData();
@@ -116,6 +111,15 @@ const Home = ({navigation, userData}) => {
         backgroundColor="#ffffff"
         onPressIcon={() => navigation.openDrawer()}
         title="Home"
+        rightIcon="cart"
+        onPressRightIcon={() => navigation.navigate('Cart')}
+        rightIconColor="#0000ff"
+      />
+      <CustomModal
+        loadingIndicator={true}
+        text="loading"
+        visible={isloading}
+        animatedType="fade"
       />
       <Searchbar placeholder="Search" style={itemstyles.searchbar} />
       <View style={itemstyles.footer}>

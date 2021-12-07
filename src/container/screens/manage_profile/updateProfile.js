@@ -23,11 +23,13 @@ import {AlertProfileUpdate} from '../../../components/AlertBox';
 import {instance, profile_image} from '../../../lib/Instances/Instance';
 import {styles} from '../../../styles/styles';
 import {changeName, changePhone} from '../../../lib/validation/validation';
-const updateProfile = ({userData, navigation}) => {
-  const [fname, setfname] = React.useState('');
-  const [lname, setlname] = React.useState('');
-  const [gender, setgender] = React.useState('male');
-  const [phone, setPhone] = React.useState('');
+import CustomModal from '../../../components/CustomModal';
+const updateProfile = ({route, userData, navigation}) => {
+  const {firstname, lastname, Phone, Gender} = route?.params;
+  const [fname, setfname] = React.useState(firstname);
+  const [lname, setlname] = React.useState(lastname);
+  const [gender, setgender] = React.useState(Gender);
+  const [phone, setPhone] = React.useState(`${Phone}`);
 
   //Validation State
   const [requesting, setRequesting] = React.useState(false);
@@ -39,7 +41,7 @@ const updateProfile = ({userData, navigation}) => {
   const [isBlanklname, setisBlanklname] = React.useState(false);
   const [isBlankphone, setisBlankphone] = React.useState(false);
   //end Validation State
-  const updateProfile = data => {
+  const updateprofile = data => {
     setRequesting(true);
     instance
       .post('/updateprofile', data, {
@@ -49,7 +51,6 @@ const updateProfile = ({userData, navigation}) => {
       })
       .then(response => {
         const data = response?.data;
-        setresponseData(data);
         AlertProfileUpdate('Updated Succesfully!');
         setRequesting(false);
       })
@@ -76,7 +77,7 @@ const updateProfile = ({userData, navigation}) => {
       setisBlankphone(true);
     }
     if (fname != '' && lname != '' && phone != '') {
-      updateProfile({
+      updateprofile({
         profileDetails: {
           firstName: fname,
           secondName: lname,
@@ -87,128 +88,114 @@ const updateProfile = ({userData, navigation}) => {
     }
   };
   return (
-    <Provider>
-      <View style={Profilestyles.Container}>
-        <Portal>
-          <Modal
-            visible={requesting}
-            contentContainerStyle={styles.containerStyle}>
-            <ActivityIndicator
-              style={{justifyContent: 'space-around', color: '#000000'}}
-            />
-            <Text style={styles.textStyle}>loading...</Text>
-          </Modal>
-        </Portal>
-        <Appbar style={Profilestyles.appbar}>
-          <Appbar.BackAction
-            icon="archive"
-            onPress={() => navigation.goBack()}
-          />
-          <Title>Back</Title>
-        </Appbar>
-        <View style={Profilestyles.header}>
-          <Image
-            source={require('../../../assets/logo.png')}
-            style={Profilestyles.headerImage}
-          />
-          <Text style={Profilestyles.headertext}>Edit Profile</Text>
-        </View>
-        <View style={Profilestyles.footer}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={50}>
-            <View style={Profilestyles.ContentStyle}>
-              <View style={styles.textInputViewStyle}>
-                <TextInput
-                  mode="flat"
-                  label="First Name"
-                  value={fname}
-                  error={!isValidfname}
-                  selectionColor="#e5e4e2"
-                  placeholder="Ex. John..."
-                  dense={true}
-                  style={styles.textInputStyle}
-                  onChangeText={text =>
-                    changeName(text, setfname, setisValidfname, setisBlankfname)
-                  }
-                />
-                <HelperText
-                  type="error"
-                  visible={!isValidfname || isBlankfname}
-                  style={styles.helperText}>
-                  {isBlankfname ? 'Required' : 'Invalid'}
-                </HelperText>
-              </View>
-
-              <View style={styles.textInputViewStyle}>
-                <TextInput
-                  mode="flat"
-                  label="Last Name"
-                  value={lname}
-                  error={!isValidlname}
-                  selectionColor="#e5e4e2"
-                  placeholder="Ex. Wright..."
-                  dense={true}
-                  style={styles.textInputStyle}
-                  onChangeText={text =>
-                    changeName(text, setlname, setisValidlname, setisBlanklname)
-                  }
-                />
-                <HelperText
-                  type="error"
-                  visible={!isValidlname || isBlanklname}
-                  style={styles.helperText}>
-                  {isBlanklname ? 'Required' : 'Invalid'}
-                </HelperText>
-              </View>
-              <View style={styles.textInputViewStyle}>
-                <TextInput
-                  mode="flat"
-                  label="Phone"
-                  value={phone}
-                  error={!isValidphone}
-                  keyboardType="phone-pad"
-                  selectionColor="#e5e4e2"
-                  placeholder="Ex. Wright..."
-                  dense={true}
-                  style={styles.textInputStyle}
-                  onChangeText={text =>
-                    changePhone(
-                      text,
-                      setPhone,
-                      setisValidphone,
-                      setisBlankphone,
-                    )
-                  }
-                />
-                <HelperText
-                  type="error"
-                  visible={!isValidphone || isBlankphone}
-                  style={styles.helperText}>
-                  {isBlankphone ? 'Required' : 'Invalid'}
-                </HelperText>
-              </View>
-              <View style={[styles.checkbox, Profilestyles.checkboxlayout]}>
-                <Text style={styles.checkboxText1}>Select Gender</Text>
-                <Text style={styles.checkboxText2}>Male</Text>
-                <RadioButton
-                  value="male"
-                  status={gender === 'male' ? 'checked' : 'unchecked'}
-                  onPress={() => setgender('male')}
-                />
-                <Text style={styles.checkboxText2}>Female</Text>
-                <RadioButton
-                  value="female"
-                  status={gender === 'female' ? 'checked' : 'unchecked'}
-                  onPress={() => setgender('female')}
-                />
-              </View>
-              <Button title="UPDATE" onPress={e => handleSubmit(e)} />
-            </View>
-          </KeyboardAvoidingView>
-        </View>
+    <View style={Profilestyles.Container}>
+      <CustomModal
+        loadingIndicator={true}
+        text="loading..."
+        visible={requesting}
+        animatedType="fade"
+      />
+      <Appbar style={Profilestyles.appbar}>
+        <Appbar.BackAction icon="archive" onPress={() => navigation.goBack()} />
+        <Title>Back</Title>
+      </Appbar>
+      <View style={Profilestyles.header}>
+        <Image
+          source={require('../../../assets/logo.png')}
+          style={Profilestyles.headerImage}
+        />
+        <Text style={Profilestyles.headertext}>Edit Profile</Text>
       </View>
-    </Provider>
+      <View style={Profilestyles.footer}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={50}>
+          <View style={Profilestyles.ContentStyle}>
+            <View style={styles.textInputViewStyle}>
+              <TextInput
+                mode="flat"
+                label="First Name"
+                value={fname}
+                error={!isValidfname}
+                selectionColor="#e5e4e2"
+                placeholder="Ex. John..."
+                dense={true}
+                style={styles.textInputStyle}
+                onChangeText={text =>
+                  changeName(text, setfname, setisValidfname, setisBlankfname)
+                }
+              />
+              <HelperText
+                type="error"
+                visible={!isValidfname || isBlankfname}
+                style={styles.helperText}>
+                {isBlankfname ? 'Required' : 'Invalid'}
+              </HelperText>
+            </View>
+
+            <View style={styles.textInputViewStyle}>
+              <TextInput
+                mode="flat"
+                label="Last Name"
+                value={lname}
+                error={!isValidlname}
+                selectionColor="#e5e4e2"
+                placeholder="Ex. Wright..."
+                dense={true}
+                style={styles.textInputStyle}
+                onChangeText={text =>
+                  changeName(text, setlname, setisValidlname, setisBlanklname)
+                }
+              />
+              <HelperText
+                type="error"
+                visible={!isValidlname || isBlanklname}
+                style={styles.helperText}>
+                {isBlanklname ? 'Required' : 'Invalid'}
+              </HelperText>
+            </View>
+            <View style={styles.textInputViewStyle}>
+              <TextInput
+                mode="flat"
+                label="Phone"
+                value={phone}
+                error={!isValidphone}
+                keyboardType="phone-pad"
+                selectionColor="#e5e4e2"
+                placeholder="Ex. Wright..."
+                dense={true}
+                style={styles.textInputStyle}
+                onChangeText={text =>
+                  changePhone(text, setPhone, setisValidphone, setisBlankphone)
+                }
+              />
+              <HelperText
+                type="error"
+                visible={!isValidphone || isBlankphone}
+                style={styles.helperText}>
+                {isBlankphone ? 'Required' : 'Invalid'}
+              </HelperText>
+            </View>
+            <View style={[styles.checkbox, Profilestyles.checkboxlayout]}>
+              <Text style={styles.checkboxText1}>Select Gender</Text>
+              <Text style={styles.checkboxText2}>Male</Text>
+              <RadioButton
+                value="male"
+                status={gender === 'male' ? 'checked' : 'unchecked'}
+                onPress={() => setgender('male')}
+              />
+              <Text style={styles.checkboxText2}>Female</Text>
+              <RadioButton
+                value="female"
+                status={gender === 'female' ? 'checked' : 'unchecked'}
+                onPress={() => setgender('female')}
+              />
+            </View>
+            <Button title="UPDATE" onPress={e => handleSubmit(e)} />
+          </View>
+        </KeyboardAvoidingView>
+      </View>
+    </View>
   );
 };
 

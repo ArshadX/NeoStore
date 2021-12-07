@@ -19,6 +19,8 @@ const Cart = ({navigation, userData}) => {
   const [itemList, setItemList] = React.useState([]);
   const [SubTotal, setSubTotal] = React.useState(0);
   const [TotalItem, setTotalItem] = React.useState(0);
+  const [isloading, setisloading] = React.useState(false);
+  const [cartId, setCartId] = React.useState('');
   useFocusEffect(
     React.useCallback(() => {
       const getData = async () => {
@@ -39,6 +41,7 @@ const Cart = ({navigation, userData}) => {
             setItemList(products);
             setSubTotal(subtotal);
             setTotalItem(totalitem);
+            setCartId(response?.data?.cart?._id);
             console.log(list);
           }
         } catch (e) {
@@ -51,6 +54,46 @@ const Cart = ({navigation, userData}) => {
       getData();
     }, []),
   );
+  const updateCart = e => {
+    e.preventDefault();
+    setisloading(true);
+    const data = {
+      cart: {
+        productIds: ['612bcfedb01b0298c4fe7523'],
+        _id: '612ca96183165d5f4bd2f42b',
+        productDetails: [
+          {
+            _id: '612cd7f78886caaa925eb384',
+            productId: '612bcfedb01b0298c4fe7523',
+            productName: 'Narzo',
+            productSeller: 'Realme',
+            productColor: 'silver',
+            productImage: 'silver-Narzo-1630305205272-639349922.jpeg',
+            productStock: 40,
+            orderQuantity: 7,
+            productPrice: 20000,
+            total: 20000,
+          },
+        ],
+      },
+    };
+    instance
+      .post('​/updateCart', data, {
+        headers: {
+          Authorization: 'Bearer ' + userData.token,
+        },
+      })
+      .then(function (response) {
+        console.log(response?.data);
+        setisloading(false);
+        AlertProfileUpdate('Successfull!');
+      })
+      .catch(function (error) {
+        console.log(error);
+        setisloading(false);
+        AlertProfileUpdate('Request failed', 'try again');
+      });
+  };
   const renderItem = ({item}) => {
     return (
       <CartCard
@@ -61,6 +104,9 @@ const Cart = ({navigation, userData}) => {
         orderQuantity={item.orderQuantity}
         color={item.productColor}
         stock={item.productStock}
+        setSubTotal={setSubTotal}
+        subTotal={SubTotal}
+        updateCart={updateCart}
       />
     );
   };
@@ -89,9 +135,9 @@ const Cart = ({navigation, userData}) => {
             pressed ? styles.pressIn : styles.pressOut,
             styles.listitem,
           ]}
-          onPress={() => navigation.navigate('resetPasswordfromAccount')}>
+          onPress={() => navigation.navigate('ProceedToBuy', {id: cartId})}>
           <Text style={styles.list}>Proceed to Buy</Text>
-          <Text style={styles.list}>({TotalItem} items)</Text>
+          <Text style={styles.list}>({itemList.length} items)</Text>
         </Pressable>
       </View>
       <View style={styles.listView}>

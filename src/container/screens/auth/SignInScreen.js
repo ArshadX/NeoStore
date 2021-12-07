@@ -17,7 +17,7 @@ import {e} from '../../../lib/reg exp/email';
 import {p} from '../../../lib/reg exp/password';
 import {emailValidation} from '../../../lib/validation/validation';
 import {passwordValidation} from '../../../lib/validation/validation';
-
+import CustomModal from '../../../components/CustomModal';
 const SignInScreen = ({navigation, login, userData, taskComplete}) => {
   const [email, setemail] = React.useState('');
   const [password, setpassword] = React.useState('');
@@ -102,112 +102,102 @@ const SignInScreen = ({navigation, login, userData, taskComplete}) => {
 
   //ends here 'validation'
   return (
-    <Provider>
-      <View style={styles.Container}>
-        <StatusBar
-          translucent={false}
-          barStyle="dark-content"
-          backgroundColor="#ffffff"
+    <View style={styles.Container}>
+      <StatusBar
+        translucent={false}
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+      />
+      <CustomModal
+        loadingIndicator={true}
+        text="loading..."
+        visible={userData?.isloading}
+        animatedType="fade"
+      />
+      <CustomModal
+        loadingIndicator={false}
+        text={userData.error}
+        visible={userData?.showModal}
+        animatedType="fade"
+        onRequestClose={() => taskComplete()}
+      />
+      <View style={styles.header}>
+        <Image
+          source={require('../../../assets/logo.png')}
+          style={styles.image}
         />
-
-        <Portal>
-          <Modal
-            visible={userData?.isloading}
-            contentContainerStyle={styles.containerStyle}>
-            <ActivityIndicator
-              style={{justifyContent: 'space-around', color: '#000000'}}
-            />
-            <Text style={styles.textStyle}>loading...</Text>
-          </Modal>
-          <Modal
-            visible={userData?.showModal}
-            onDismiss={() => taskComplete()}
-            contentContainerStyle={styles.containerStyle}>
-            <Text style={styles.textStyle}>{userData.error}</Text>
-          </Modal>
-        </Portal>
-
-        <View style={styles.header}>
-          <Image
-            source={require('../../../assets/logo.png')}
-            style={styles.image}
-          />
-        </View>
-        <View style={styles.footer}>
-          <View style={styles.sectionSignIn}>
-            <TextInput
-              mode="outlined"
-              label="Email Id"
-              value={email}
-              error={!isValidEmail}
-              placeholder="Email Address..."
-              onChangeText={text => changeEmail(text)}
-              onBlur={() => emailValidation(setisValidEmail, email)}
-              left={<TextInput.Icon name="email" />}
-              style={styles.textInputStyle}
-            />
-            <HelperText type="error" visible={!isValidEmail || isBlankemail}>
-              {isBlankemail ? 'Required' : 'Invlalid'}
-            </HelperText>
-          </View>
-          <View style={styles.sectionSignIn}>
-            <TextInput
-              mode="outlined"
-              label="Password"
-              value={password}
-              error={!isValidPassword}
-              placeholder="password..."
-              onChangeText={text => changePassword(text)}
-              onBlur={() => passwordValidation(setisValidPassword, password)}
-              secureTextEntry={isSecureTextEntry}
-              left={<TextInput.Icon name="lock" />}
-              right={
-                isSecureTextEntry ? (
-                  <TextInput.Icon
-                    name="eye-off"
-                    onPress={() => {
-                      setisSecureTextEntry(false);
-                    }}
-                  />
-                ) : (
-                  <TextInput.Icon
-                    name="eye"
-                    onPress={() => {
-                      setisSecureTextEntry(true);
-                    }}
-                  />
-                )
-              }
-              style={styles.textInputStyle}
-            />
-            <HelperText
-              type="error"
-              visible={!isValidPassword || isBlankpassword}>
-              {isBlankpassword ? 'Required' : 'Must be alphanumeric'}
-            </HelperText>
-          </View>
-          <View style={styles.section}>
-            <Button
-              icon="login"
-              mode="contained"
-              onPress={e => signinHandle(e)}>
-              Sign IN
-            </Button>
-          </View>
-          <Text
-            style={styles.linkText}
-            onPress={() => navigation.navigate('forgotPassword')}>
-            Forgot Password?
-          </Text>
-          <Text style={styles.textStyle}>New user?</Text>
-          <Text
-            style={styles.linkText}
-            onPress={() => navigation.navigate('SignUp')}>
-            Create an acoount
-          </Text>
-        </View>
       </View>
-    </Provider>
+      <View style={styles.footer}>
+        <View style={styles.sectionSignIn}>
+          <TextInput
+            mode="outlined"
+            label="Email Id"
+            value={email}
+            error={!isValidEmail}
+            placeholder="Email Address..."
+            onChangeText={text => changeEmail(text)}
+            onBlur={() => emailValidation(setisValidEmail, email)}
+            left={<TextInput.Icon name="email" />}
+            style={styles.textInputStyle}
+          />
+          <HelperText type="error" visible={!isValidEmail || isBlankemail}>
+            {isBlankemail ? 'Required' : 'Invlalid'}
+          </HelperText>
+        </View>
+        <View style={styles.sectionSignIn}>
+          <TextInput
+            mode="outlined"
+            label="Password"
+            value={password}
+            error={!isValidPassword}
+            placeholder="password..."
+            onChangeText={text => changePassword(text)}
+            onBlur={() => passwordValidation(setisValidPassword, password)}
+            secureTextEntry={isSecureTextEntry}
+            left={<TextInput.Icon name="lock" />}
+            right={
+              isSecureTextEntry ? (
+                <TextInput.Icon
+                  name="eye-off"
+                  onPress={() => {
+                    setisSecureTextEntry(false);
+                  }}
+                />
+              ) : (
+                <TextInput.Icon
+                  name="eye"
+                  onPress={() => {
+                    setisSecureTextEntry(true);
+                  }}
+                />
+              )
+            }
+            style={styles.textInputStyle}
+          />
+          <HelperText
+            type="error"
+            visible={!isValidPassword || isBlankpassword}>
+            {isBlankpassword ? 'Required' : 'Must be alphanumeric'}
+          </HelperText>
+        </View>
+        <View style={styles.section}>
+          <Button icon="login" mode="contained" onPress={e => signinHandle(e)}>
+            Sign IN
+          </Button>
+        </View>
+        <Text
+          style={styles.linkText}
+          onPress={() => navigation.navigate('forgotPassword')}>
+          Forgot Password?
+        </Text>
+        <Text style={styles.textStyle}>New user?</Text>
+        <Text
+          style={styles.linkText}
+          onPress={() => navigation.navigate('SignUp')}>
+          Create an acoount
+        </Text>
+      </View>
+    </View>
   );
 };
 

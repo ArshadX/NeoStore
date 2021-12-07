@@ -11,28 +11,32 @@ import {imageUrl, instance} from '../lib/Instances/Instance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Rating} from 'react-native-ratings';
 import {styles} from '../styles/styles';
-export const AllItems = ({image, name, rating, price}) => {
+export const AllItems = ({image, name, rating, price, navigation, id}) => {
   return (
     <View style={itemstyles.flatListTRP}>
-      <Card style={itemstyles.cardDesignTRP}>
-        <Card.Content style={itemstyles.contentTRP}>
-          <Image
-            source={{uri: imageUrl + image}}
-            style={itemstyles.topRatedProducts}
-          />
-          <View style={itemstyles.productInfo}>
-            <Title>{name}</Title>
-            <Text style={styles.textStyle}>Price: {price}</Text>
-            <Rating
-              count={5}
-              defaultRating={rating}
-              imageSize={15}
-              readonly={true}
-              style={itemstyles.ratingStyle}
+      <Pressable
+        android_ripple={{radius: 190, foreground: true}}
+        onPress={() => navigation.navigate('productDetails', {id: id})}>
+        <Card style={itemstyles.cardDesignTRP}>
+          <Card.Content style={itemstyles.contentTRP}>
+            <Image
+              source={{uri: imageUrl + image}}
+              style={itemstyles.topRatedProducts}
             />
-          </View>
-        </Card.Content>
-      </Card>
+            <View style={itemstyles.productInfo}>
+              <Title>{name}</Title>
+              <Text style={styles.textStyle}>Price: {price}</Text>
+              <Rating
+                count={5}
+                defaultRating={rating}
+                imageSize={15}
+                readonly={true}
+                style={itemstyles.ratingStyle}
+              />
+            </View>
+          </Card.Content>
+        </Card>
+      </Pressable>
     </View>
   );
 };

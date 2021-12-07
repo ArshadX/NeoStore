@@ -16,6 +16,7 @@ const Button = ({title, onPress}) => {
 };
 const styles = StyleSheet.create({
   pressableStyle: {
+    flexDirection: 'row',
     paddingTop: 10,
     paddingBottom: 10,
     alignItems: 'center',
@@ -23,6 +24,8 @@ const styles = StyleSheet.create({
     marginLeft: 120,
     marginRight: 120,
     borderRadius: 6,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   buttonText: {
     color: '#ffffff',

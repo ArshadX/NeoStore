@@ -83,13 +83,11 @@ const MyAccount = ({userData, navigation}) => {
       <View style={AccountStyle.header}>
         <View style={AccountStyle.userInfo}>
           {responseData.profilePic !== null ? (
-            <Pressable onPress={() => imageupload()}>
-              <Image
-                defaultSource={require('../../assets/icon.png')}
-                source={{uri: profile_image + responseData.profilePic}}
-                style={AccountStyle.profilePhoto}
-              />
-            </Pressable>
+            <Image
+              defaultSource={require('../../assets/icon.png')}
+              source={{uri: profile_image + responseData.profilePic}}
+              style={AccountStyle.profilePhoto}
+            />
           ) : (
             <Pressable onPress={() => imageupload()}>
               <Image
@@ -111,6 +109,14 @@ const MyAccount = ({userData, navigation}) => {
           </Title>
           <Text style={AccountStyle.userDetail}>{responseData.mobile}</Text>
           <Text style={AccountStyle.userDetail}>{responseData.email}</Text>
+          <Pressable
+            onPress={() => imageupload()}
+            style={({pressed}) => [
+              pressed ? AccountStyle.pressIn : AccountStyle.pressOut,
+              AccountStyle.button,
+            ]}>
+            <Text style={styles.textStyle}>Change Profile Picture</Text>
+          </Pressable>
         </View>
       </View>
       <View style={styles.footer}>
@@ -149,7 +155,14 @@ const MyAccount = ({userData, navigation}) => {
             pressed ? AccountStyle.pressIn : AccountStyle.pressOut,
             AccountStyle.listitem,
           ]}
-          onPress={() => navigation.navigate('updateProfile')}>
+          onPress={() =>
+            navigation.navigate('updateProfile', {
+              firstname: responseData.firstName,
+              lastname: responseData.secondName,
+              Phone: responseData.mobile,
+              Gender: responseData.gender,
+            })
+          }>
           <Icon name="account-box" size={30} color="#000000" />
           <Text style={AccountStyle.list}>Edit Profile</Text>
           <Arrow distance={310} arrowType="chevron-right" />
@@ -215,10 +228,8 @@ const AccountStyle = StyleSheet.create({
   pressOut: {backgroundColor: '#d3d3d3'},
   iconStyle: {
     position: 'absolute',
-    right: 20,
-    left: 60,
-    top: -10,
-    bottom: 30,
+    left: 50,
+    top: 80,
   },
   profilePhoto: {
     width: 100,
@@ -228,6 +239,16 @@ const AccountStyle = StyleSheet.create({
     borderColor: '#6495ed',
     borderRadius: 50,
     backgroundColor: '#d3d3d3',
+  },
+  button: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: '#d3d3d3',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
 });
 const mapStateToProps = state => {

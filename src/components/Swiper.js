@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-evenly',
     alignItems: 'center',
-
     borderBottomWidth: 1,
     borderBottomColor: '#d3d3d3',
     backgroundColor: '#ffffff',

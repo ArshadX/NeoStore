@@ -8,13 +8,13 @@ import {
   Provider,
   Portal,
   Modal,
-  Appbar,
 } from 'react-native-paper';
 
 import {instance} from '../../lib/Instances/Instance';
 import {AllItems, Category} from '../../components/Filter';
 import {useFocusEffect} from '@react-navigation/native';
 import {connect} from 'react-redux';
+import Appbar from '../../components/Appbar';
 
 const AllProduct = ({userData, navigation}) => {
   const [AllCategories, setallCategories] = React.useState([]);
@@ -45,7 +45,7 @@ const AllProduct = ({userData, navigation}) => {
             setallCategories(allCategories);
             setcommonProducts(commonProducts);
             setallColors(colors);
-            console.log(allCategories);
+            console.log(commonProducts);
             console.log(value);
           }
         } catch (e) {
@@ -64,6 +64,8 @@ const AllProduct = ({userData, navigation}) => {
         name={item.name}
         price={item.price}
         rating={item.rating}
+        navigation={navigation}
+        id={item.id}
       />
     );
   };
@@ -73,11 +75,15 @@ const AllProduct = ({userData, navigation}) => {
   return (
     <Provider>
       <View style={itemstyles.Container}>
-        {/** filter option show */}
-        <Appbar.Header style={itemstyles.appbar}>
-          <Appbar.BackAction onPress={() => navigation.goBack()} />
-          <Appbar.Content title="Product List" subtitle="All Product" />
-        </Appbar.Header>
+        <Appbar
+          leftIcon="arrow-left"
+          title="back"
+          onPressIcon={() => navigation.goBack()}
+          rightIcon="cart"
+          rightIconColor="#0000ff"
+          onPressRightIcon={() => navigation.navigate('Cart')}
+          backgroundColor="#ffffff"
+        />
         <Portal>
           <Modal
             visible={VisibleCat}

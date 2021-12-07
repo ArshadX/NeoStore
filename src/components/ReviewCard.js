@@ -1,11 +1,11 @@
 import React from 'react';
 
 import {View, Text, StyleSheet, Image, Pressable} from 'react-native';
-import {imageUrl, instance} from '../lib/Instances/Instance';
 import {Card} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconButton from './IconButton';
-const CartCard = ({
+import {imageUrl, instance} from '../lib/Instances/Instance';
+
+const ReviewCard = ({
   image,
   name,
   price,
@@ -13,9 +13,6 @@ const CartCard = ({
   orderQuantity,
   color,
   stock,
-  setSubTotal,
-  subTotal,
-  updateCart,
 }) => {
   const [OrderQuantity, setOrderQuantity] = React.useState(orderQuantity);
 
@@ -45,33 +42,8 @@ const CartCard = ({
         </Card.Content>
         <View style={itemstyles.action}>
           <View style={itemstyles.countView}>
-            <IconButton
-              name="minus"
-              size={20}
-              onPress={() => {
-                if (OrderQuantity > 1) {
-                  setOrderQuantity(OrderQuantity - 1);
-                  setSubTotal(subTotal - price);
-                } else {
-                  setOrderQuantity(1);
-                }
-              }}
-            />
             <Text style={itemstyles.count}>{OrderQuantity}</Text>
-            <IconButton
-              name="plus"
-              size={20}
-              onPress={() => {
-                setOrderQuantity(OrderQuantity + 1);
-                setSubTotal(subTotal + price);
-              }}
-            />
           </View>
-          <Pressable
-            android_ripple={{radius: 30, borderless: true}}
-            onPress={e => updateCart(e)}>
-            <Icon name="delete" color="#000000" size={30} />
-          </Pressable>
         </View>
       </Card>
     </View>
@@ -150,5 +122,4 @@ const itemstyles = StyleSheet.create({
     color: '#fe2712',
   },
 });
-
-export default CartCard;
+export default ReviewCard;

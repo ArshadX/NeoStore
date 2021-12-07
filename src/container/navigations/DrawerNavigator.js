@@ -7,7 +7,7 @@ import DrawerContentafter from '../screens/DrawerContentafter';
 
 import AllProduct from '../screens/AllProduct';
 import AccountNavigation from './AccountNavigation';
-import Cart from '../screens/Cart';
+import CartStackScreen from './CartStackScreen';
 import MyOrders from '../screens/MyOrders';
 import {connect} from 'react-redux';
 //Will be move to StackScreens
@@ -43,7 +43,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="Cart"
-        component={Cart}
+        component={CartStackScreen}
         options={{
           title: 'Cart',
           headerShown: false,
