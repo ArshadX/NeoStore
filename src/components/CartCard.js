@@ -5,6 +5,7 @@ import {imageUrl, instance} from '../lib/Instances/Instance';
 import {Card} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconButton from './IconButton';
+import {connect} from 'react-redux';
 const CartCard = ({
   image,
   name,
@@ -13,12 +14,10 @@ const CartCard = ({
   orderQuantity,
   color,
   stock,
-  setSubTotal,
-  subTotal,
-  updateCart,
+  handleDelete,
+  itemId,
+  total,
 }) => {
-  const [OrderQuantity, setOrderQuantity] = React.useState(orderQuantity);
-
   return (
     <View style={itemstyles.flatList}>
       <Card style={itemstyles.cardDesign}>
@@ -36,40 +35,18 @@ const CartCard = ({
             <Text style={itemstyles.textStyle}>Seller: {seller}</Text>
 
             <Text style={itemstyles.textStyle}>{color}</Text>
-            {stock < 0 ? (
+            {true ? (
               <Text style={itemstyles.stock}>In stock</Text>
             ) : (
               <Text style={itemstyles.outStock}>Out of stock</Text>
             )}
+            <Text>{orderQuantity}</Text>
           </View>
         </Card.Content>
         <View style={itemstyles.action}>
-          <View style={itemstyles.countView}>
-            <IconButton
-              name="minus"
-              size={20}
-              onPress={() => {
-                if (OrderQuantity > 1) {
-                  setOrderQuantity(OrderQuantity - 1);
-                  setSubTotal(subTotal - price);
-                } else {
-                  setOrderQuantity(1);
-                }
-              }}
-            />
-            <Text style={itemstyles.count}>{OrderQuantity}</Text>
-            <IconButton
-              name="plus"
-              size={20}
-              onPress={() => {
-                setOrderQuantity(OrderQuantity + 1);
-                setSubTotal(subTotal + price);
-              }}
-            />
-          </View>
           <Pressable
             android_ripple={{radius: 30, borderless: true}}
-            onPress={e => updateCart(e)}>
+            onPress={() => handleDelete(itemId, total)}>
             <Icon name="delete" color="#000000" size={30} />
           </Pressable>
         </View>
@@ -117,7 +94,7 @@ const itemstyles = StyleSheet.create({
     fontSize: 20,
   },
   action: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginHorizontal: 10,
@@ -150,5 +127,9 @@ const itemstyles = StyleSheet.create({
     color: '#fe2712',
   },
 });
-
-export default CartCard;
+const mapStateToProps = state => {
+  return {
+    userData: state.user,
+  };
+};
+export default connect(mapStateToProps, null)(CartCard);

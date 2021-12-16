@@ -1,36 +1,46 @@
 import React from 'react';
 import {View, Text, StyleSheet, Pressable, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {connect} from 'react-redux';
-import {instance} from '../lib/Instances/Instance';
-
 const CustomFlatlist2 = ({
   address,
   city,
   pincode,
   state,
   country,
-  id,
-  navigation,
   handleSelect,
+  navigation,
+  id,
 }) => {
   return (
     <View style={styles.cardDesign}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Address</Text>
-        <Text>{address}</Text>
-        <Text>{city}</Text>
-        <Text>{state}</Text>
-        <Text>{pincode}</Text>
-        <Text>{country}</Text>
-      </View>
+      <Pressable
+        onPress={e => handleSelect(e, address, city, pincode, state, country)}>
+        <View style={styles.content}>
+          <Text style={styles.title}>Address</Text>
+          <Text>{address}</Text>
+          <Text>{city}</Text>
+          <Text>{state}</Text>
+          <Text>{pincode}</Text>
+          <Text>{country}</Text>
+        </View>
+      </Pressable>
       <View style={styles.Action}>
         <Pressable
           style={styles.button}
-          onPress={e =>
-            handleSelect(e, address, city, pincode, state, country)
-          }>
-          <Text>select</Text>
+          onPress={() => {
+            navigation.navigate('EditAddressPTB', {
+              itemid: id,
+              itemAddress: address,
+              itemPincode: pincode,
+              itemCity: city,
+              itemState: state,
+              itemCountry: country,
+            });
+          }}>
+          <Text>
+            <Icon name="pencil" size={15} color="#000000" />
+            Edit
+          </Text>
         </Pressable>
       </View>
     </View>
@@ -56,6 +66,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 15,
     marginTop: 10,
+    marginBottom: 20,
   },
   button: {
     justifyContent: 'center',

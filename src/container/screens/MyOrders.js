@@ -1,14 +1,19 @@
 import {useFocusEffect} from '@react-navigation/core';
 import React from 'react';
 
-import {Text, View, StyleSheet} from 'react-native';
-import {Appbar} from 'react-native-paper';
+import {Text, View, StyleSheet, FlatList} from 'react-native';
+import Appbar from '../../components/Appbar';
 import {instance} from '../../lib/Instances/Instance';
 import {connect} from 'react-redux';
-
+import OrderReview from '../../components/OrderReview';
+import CustomModal from '../../components/CustomModal';
+import {AlertProfileUpdate} from '../../components/AlertBox';
 const MyOrders = ({navigation, userData}) => {
+  const [productlist, setProductlist] = React.useState([]);
+  const [isloading, setisloading] = React.useState(false);
   useFocusEffect(
     React.useCallback(() => {
+      setisloading(true);
       instance
         .get('/getOrders', {
           headers: {
@@ -16,22 +21,45 @@ const MyOrders = ({navigation, userData}) => {
           },
         })
         .then(response => {
-          const data = response?.data;
-          console.log(data);
+          const data = response?.data?.ordersDetails;
+          console.log(response?.data?.ordersDetails);
+          setProductlist(data);
+          setisloading(false);
         })
         .catch(e => {
           console.log(e);
+          setisloading(false);
+          AlertProfileUpdate('Request failed!', 'revisit again');
         });
     }, []),
   );
+  const renderItem = ({item}) => {
+    return (
+      <OrderReview
+        orderPlacedOn={item.orderPlacedOn}
+        invoice={item.invoice}
+        productsInOrder={item.productsInOrder}
+        totalPrice={item.totalPrice}
+      />
+    );
+  };
   return (
     <View style={styles.Container}>
-      <Appbar.Header style={styles.appbar}>
-        <Appbar.BackAction onPress={navigation.goBack} />
-        <Appbar.Content title="Your Orders" subtitle="Edit" />
-      </Appbar.Header>
+      <Appbar
+        leftIcon="arrow-left"
+        title="My Orders"
+        onPressIcon={() => navigation.goBack()}
+        backgroundColor="#214fc6"
+        Contentcolor="#ffffff"
+      />
+      <CustomModal
+        text="loading..."
+        visible={isloading}
+        animatedType="fade"
+        loadingIndicator={true}
+      />
       <View style={styles.header}>
-        <Text>Orders Details</Text>
+        <FlatList data={productlist} renderItem={renderItem} />
       </View>
     </View>
   );

@@ -1,15 +1,8 @@
 import React from 'react';
 import {styles} from '../../../styles/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {StatusBar, Text, View, Image, ActivityIndicator} from 'react-native';
-import {
-  HelperText,
-  TextInput,
-  Button,
-  Modal,
-  Portal,
-  Provider,
-} from 'react-native-paper';
+import {StatusBar, Text, View, Image} from 'react-native';
+import {HelperText, TextInput, Button} from 'react-native-paper';
 import {connect} from 'react-redux';
 import {login, taskComplete} from '../../../redux/user/userActions';
 
@@ -26,27 +19,6 @@ const SignInScreen = ({navigation, login, userData, taskComplete}) => {
   const [isBlankemail, setisBlankemail] = React.useState(false);
   const [isBlankpassword, setisBlankpassword] = React.useState(false);
   const [isSecureTextEntry, setisSecureTextEntry] = React.useState(true);
-  React.useEffect(() => {
-    const getData = async () => {
-      try {
-        const emailValue = await AsyncStorage.getItem('Email');
-        const passwordValue = await AsyncStorage.getItem('Password');
-        if (emailValue !== null) {
-          login({
-            email: emailValue,
-            password: passwordValue,
-          });
-          console.log(emailValue);
-        } else {
-          console.log(passwordValue);
-        }
-      } catch (e) {
-        // error reading value
-        console.log('heelo');
-      }
-    };
-    getData();
-  }, []);
   const redirect = async () => {
     const firstPair = ['Email', email];
     const secondPair = ['Password', password];
@@ -116,9 +88,10 @@ const SignInScreen = ({navigation, login, userData, taskComplete}) => {
       />
       <CustomModal
         loadingIndicator={false}
-        text={userData.error}
-        visible={userData?.showModal}
+        text="User does not Exist"
+        visible={userData.showModal}
         animatedType="fade"
+        onShow={() => setTimeout(taskComplete, 3000)}
         onRequestClose={() => taskComplete()}
       />
       <View style={styles.header}>
@@ -208,7 +181,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    login: (data, redirect) => dispatch(login(data, redirect)),
+    login: data => dispatch(login(data)),
     taskComplete: () => dispatch(taskComplete()),
   };
 };

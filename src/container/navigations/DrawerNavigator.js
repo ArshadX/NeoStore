@@ -10,8 +10,9 @@ import AccountNavigation from './AccountNavigation';
 import CartStackScreen from './CartStackScreen';
 import MyOrders from '../screens/MyOrders';
 import {connect} from 'react-redux';
+import ProductListStack from './ProductListStack';
+import StoreLocator from '../screens/StoreLocator';
 //Will be move to StackScreens
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 const Drawer = createDrawerNavigator();
 
@@ -35,7 +36,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="allProduct"
-        component={AllProduct}
+        component={ProductListStack}
         options={{
           title: 'Product List',
           headerShown: false,
@@ -54,6 +55,14 @@ const DrawerNavigator = () => {
         component={MyOrders}
         options={{
           title: 'Orders',
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="Location"
+        component={StoreLocator}
+        options={{
+          title: 'Map',
           headerShown: false,
         }}
       />

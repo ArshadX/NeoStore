@@ -13,7 +13,8 @@ import {instance} from '../../../lib/Instances/Instance';
 import CustomModal from '../../../components/CustomModal';
 import {connect} from 'react-redux';
 import {AlertProfileUpdate} from '../../../components/AlertBox';
-const ResetPasswordfromAccount = ({userData}) => {
+import Appbar from '../../../components/Appbar';
+const ResetPasswordfromAccount = ({userData, navigation}) => {
   const [currentPassword, setPassword] = React.useState('');
   const [newPassword, setnewPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
@@ -74,6 +75,13 @@ const ResetPasswordfromAccount = ({userData}) => {
         visible={isloading}
         animatedType="fade"
         text="loading..."
+      />
+      <Appbar
+        leftIcon="arrow-left"
+        title="back"
+        onPressIcon={() => navigation.goBack()}
+        backgroundColor="#214fc6"
+        Contentcolor="#ffffff"
       />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Reset Password</Text>

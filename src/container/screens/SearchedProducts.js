@@ -1,44 +1,38 @@
 import React from 'react';
 
 import {Text, View, FlatList, StyleSheet, Image} from 'react-native';
+import {
+  Button,
+  IconButton,
+  Title,
+  Provider,
+  Portal,
+  Modal,
+} from 'react-native-paper';
 
 import {instance} from '../../lib/Instances/Instance';
 import {AllItems, Category} from '../../components/Filter';
 import {useFocusEffect} from '@react-navigation/native';
 import {connect} from 'react-redux';
 import Appbar from '../../components/Appbar';
-import CustomModal from '../../components/CustomModal';
-const AllProduct = ({userData, navigation}) => {
-  const [AllCategories, setallCategories] = React.useState([]);
+
+const SearchedProducts = ({route, userData, navigation}) => {
+  const {list} = route?.params;
+
   const [CommonProducts, setcommonProducts] = React.useState([]);
-  const [AllColors, setallColors] = React.useState([]);
-  const [isloading, setisloading] = React.useState(false);
   useFocusEffect(
     React.useCallback(() => {
-      setisloading(true);
       const getData = async () => {
         try {
           const value = await userData.token;
           if (value !== null) {
-            const response = await instance.get('/commonProducts', {
-              headers: {
-                Authorization: 'Bearer ' + value,
-              },
-            });
-            const allCategories = response?.data?.allCategories;
-            const commonProducts = response?.data?.commonProducts;
-            const colors = response?.data?.allColors;
-            //terminal output
-            setallCategories(allCategories);
-            setcommonProducts(commonProducts);
-            setallColors(colors);
-            setisloading(false);
-            console.log(commonProducts);
+            setcommonProducts(list);
+
+            console.log(list);
           }
         } catch (e) {
           // error reading value
           console.log(e);
-          setisloading(false);
         }
       };
 
@@ -57,33 +51,18 @@ const AllProduct = ({userData, navigation}) => {
       />
     );
   };
-  const renderCategory = ({item, index}) => {
-    return <Category item={item} index={index} filterOption={filterOpt} />;
-  };
   return (
     <View style={itemstyles.Container}>
       <Appbar
         leftIcon="arrow-left"
         title="back"
         onPressIcon={() => navigation.goBack()}
-        rightIcon="filter"
-        rightIconColor="#0000ff"
-        onPressRightIcon={() =>
-          navigation.navigate('filter', {
-            Categories: AllCategories,
-            Colors: AllColors,
-          })
-        }
-        backgroundColor="#ffffff"
-        Contentcolor="#000000"
+        rightIcon="cart"
+        rightIconColor="#ffffff"
+        onPressRightIcon={() => navigation.navigate('Cart')}
+        backgroundColor="#214fc6"
+        Contentcolor="#ffffff"
       />
-      <CustomModal
-        loadingIndicator={true}
-        text="loading..."
-        visible={isloading}
-        animatedType="fade"
-      />
-      {/** Filter option end */}
       <View style={itemstyles.header}>
         <FlatList
           data={CommonProducts}
@@ -91,7 +70,6 @@ const AllProduct = ({userData, navigation}) => {
           keyExtractor={item => item.id}
         />
       </View>
-      {/**filter bar  */}
     </View>
   );
 };
@@ -156,4 +134,4 @@ const mapStateToProps = state => {
     userData: state.user,
   };
 };
-export default connect(mapStateToProps, null)(AllProduct);
+export default connect(mapStateToProps, null)(SearchedProducts);

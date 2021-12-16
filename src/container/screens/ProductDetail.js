@@ -34,6 +34,7 @@ const ProductDetail = ({route, navigation, userData}) => {
   //order items
   const [totalItem, setTotalItem] = React.useState(1);
   React.useEffect(() => {
+    setisloading(true);
     const getData = async () => {
       try {
         const value = await userData.token;
@@ -50,10 +51,13 @@ const ProductDetail = ({route, navigation, userData}) => {
           setProductDetails(response?.data);
           setColor(response?.data?.colors);
           console.log(response?.data);
+          setisloading(false);
         }
       } catch (e) {
         // error reading value
-        console.log(e);
+        console.log(e?.message);
+        AlertProfileUpdate('Request failed!', 'Please revisit...');
+        setisloading(false);
       }
     };
     getData();
@@ -71,7 +75,7 @@ const ProductDetail = ({route, navigation, userData}) => {
       .then(function (response) {
         console.log(response?.data);
         setisloading(false);
-        AlertProfileUpdate('Successfull!');
+        AlertProfileUpdate('Successfull!', 'added to the cart');
       })
       .catch(function (error) {
         console.log(error);
@@ -92,7 +96,6 @@ const ProductDetail = ({route, navigation, userData}) => {
       .then(function (response) {
         console.log(response?.data);
         setisloading(false);
-        AlertProfileUpdate('Successfull!');
         navigation.navigate('Cart');
       })
       .catch(function (error) {

@@ -6,12 +6,19 @@ import SignInScreen from '../screens/auth/SignInScreen';
 import SignUpScreen from '../screens/auth/SignUpScreen';
 import forgotPassword from '../screens/auth/forgotPassword';
 import resetPassword from '../screens/auth/resetPassword';
-
+import SplashScreen from '../screens/auth/SplashScreen';
 const RootStack = createNativeStackNavigator();
 
 const RootStackScreen = ({navigation}) => {
   return (
-    <RootStack.Navigator initialRouteName="SignIn">
+    <RootStack.Navigator initialRouteName="SplashScreen">
+      <RootStack.Screen
+        name="SplashScreen"
+        component={SplashScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
       <RootStack.Screen
         name="SignIn"
         component={SignInScreen}

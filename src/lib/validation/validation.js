@@ -89,7 +89,7 @@ export const changeConfirmPassword = (
 };
 
 export const handleAddress = (text, setAddress, setBlankAddress) => {
-  let temp = text.trim();
+  let temp = text.trimLeft();
   if (temp === '') {
     setBlankAddress(false);
     setAddress('');
@@ -115,7 +115,7 @@ export const handletextChange = (
   setValidName,
   setisBlankinput,
 ) => {
-  let temp = text.trim();
+  let temp = text.trimLeft();
   if (temp === '') {
     setValidName(true);
     setName('');

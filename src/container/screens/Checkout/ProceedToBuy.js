@@ -67,7 +67,11 @@ const ProceedToBuy = ({route, navigation, userData}) => {
       .then(response => {
         console.log(response?.data?.data);
         setisloading(false);
-        navigation.navigate('OrderReview', {id: response?.data?.data?._id});
+        navigation.navigate('OrderReview', {
+          id: response?.data?.data?._id,
+          email: response?.data?.data?.userEmail,
+          Name: response?.data?.data?.userName,
+        });
       })
       .catch(error => {
         console.log(error?.message);
@@ -96,12 +100,13 @@ const ProceedToBuy = ({route, navigation, userData}) => {
         loadingIndicator={true}
         visible={isloading}
       />
-      <StatusBar barStyle="dark-content" backgroundColor="#6495ed" />
+      <StatusBar barStyle="light-content" backgroundColor="#214fc6" />
       <Appbar
         title="Back"
         leftIcon="arrow-left"
-        backgroundColor="#d3d3d3"
+        backgroundColor="#214fc6"
         onPressIcon={() => navigation.goBack()}
+        Contentcolor="#ffffff"
       />
       <View style={styles.ViewAddress}>
         <Text style={styles.title}>Your Addresses</Text>

@@ -7,6 +7,7 @@ import Cart from '../screens/Cart';
 import ProceedToBuy from '../screens/Checkout/ProceedToBuy';
 
 import OrderReview from '../screens/Checkout/OrderReview';
+import EditAddfromPTB from '../screens/manage_profile/Addresses/EditAddfromPTB';
 const CartStack = createNativeStackNavigator();
 
 const CartStackScreen = () => {
@@ -25,6 +26,11 @@ const CartStackScreen = () => {
       <CartStack.Screen
         name="OrderReview"
         component={OrderReview}
+        options={{headerShown: false}}
+      />
+      <CartStack.Screen
+        name="EditAddressPTB"
+        component={EditAddfromPTB}
         options={{headerShown: false}}
       />
     </CartStack.Navigator>

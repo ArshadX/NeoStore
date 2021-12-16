@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, Text} from 'react-native';
-import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
-import {Title, Caption, Drawer, Button} from 'react-native-paper';
+import {View, Text, Image} from 'react-native';
+import {DrawerContentScrollView} from '@react-navigation/drawer';
+import {Drawer} from 'react-native-paper';
 
 import {styles} from '../../styles/styles';
 import {connect} from 'react-redux';
@@ -11,7 +11,10 @@ const DrawerContentafter = ({navigation, Logout}) => {
     <View style={styles.Container}>
       <DrawerContentScrollView>
         <View style={styles.header}>
-          <Text style={styles.titleHeader}>NeoStore</Text>
+          <Image
+            source={require('../../assets/logo.png')}
+            style={{width: 100, height: 100}}
+          />
         </View>
         <View style={styles.footer}>
           <Drawer.Section>
@@ -45,7 +48,11 @@ const DrawerContentafter = ({navigation, Logout}) => {
               onPress={() => navigation.navigate('MyOrder')}
             />
 
-            <Drawer.Item icon="map-marker-multiple" label="Store Locator" />
+            <Drawer.Item
+              icon="map-marker-multiple"
+              label="Store Locator"
+              onPress={() => navigation.navigate('Location')}
+            />
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>

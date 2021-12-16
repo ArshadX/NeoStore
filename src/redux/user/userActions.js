@@ -1,10 +1,10 @@
 import axios from 'axios';
 import {instance} from '../../lib/Instances/Instance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {
   FETCH_USERS_FAILURE,
   FETCH_USERS_FAILURE2,
+  FETCH_USERS_FAILURESplash,
   FETCH_USERS_REQUEST,
   FETCH_USERS_SUCCESS,
   SignOut,
@@ -44,6 +44,11 @@ export const fetchUsersFailure2 = error => {
     payload: error,
   };
 };
+export const fetchUsersFailureSplash = () => {
+  return {
+    type: FETCH_USERS_FAILURESplash,
+  };
+};
 export const signOUT = () => {
   //remove this
   return {
@@ -67,7 +72,7 @@ const fetchProduct = list => {
  * @param {login} data
  * @returns repsonse with data
  */
-export const login = data => {
+export const login = (data, screen) => {
   return dispatch => {
     dispatch(fetchUsersRequest());
     instance
@@ -79,7 +84,24 @@ export const login = data => {
       })
       .catch(error => {
         const errorMsg = error;
-        dispatch(fetchUsersFailure(errorMsg));
+        dispatch(fetchUsersFailure2(errorMsg));
+        console.log(errorMsg);
+      });
+  };
+};
+export const loginfromSplash = data => {
+  return dispatch => {
+    dispatch(fetchUsersRequest());
+    instance
+      .post('/login', data)
+      .then(response => {
+        const users = response.data;
+        dispatch(fetchUsersSuccess(users));
+        console.log(users);
+      })
+      .catch(error => {
+        const errorMsg = error;
+        dispatch(fetchUsersFailureSplash());
         console.log(errorMsg);
       });
   };

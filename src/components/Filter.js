@@ -65,7 +65,17 @@ export const Category = ({item, filterOption}) => {
       console.log(e);
     }
   };
-  const handleSubmit = () => {
+  const selectOption = () => {
+    if (filterOption === 'category') {
+      itemCat.push(item);
+    } else if (filterOption === 'color') {
+      itemColor.push(item);
+    } else if (filterOption === 'price') {
+      setSorting(item);
+    } else if (filterOption === 'rating') {
+      setOrderby(item);
+    }
+
     const data = {
       categories: [itemCat],
       colors: [itemColor],
@@ -74,12 +84,14 @@ export const Category = ({item, filterOption}) => {
         order: orderby,
       },
     };
-    getData(data);
+    console.log(item);
+    console.log(itemCat);
+    //  getData(data);
   };
   return (
     <View style={itemstyles.container}>
       <Pressable
-        onPress={() => handleSubmit()}
+        onPress={() => selectOption()}
         style={itemstyles.content}
         android_ripple={{color: '#dcdcdc', radius: 50}}>
         <Text style={itemstyles.textStyle}>{item}</Text>

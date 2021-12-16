@@ -11,3 +11,5 @@ export const AlertProfileUpdate = (title, details) =>
   Alert.alert(title, details, [
     {text: 'OK', onPress: () => console.log('OK Pressed')},
   ]);
+export const AlertProfileUpdate2 = (title, details, onPress) =>
+  Alert.alert(title, details, [{text: 'OK', onPress: onPress}]);

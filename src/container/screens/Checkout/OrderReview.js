@@ -2,17 +2,33 @@ import {useFocusEffect} from '@react-navigation/native';
 import React from 'react';
 import {connect} from 'react-redux';
 import {instance} from '../../../lib/Instances/Instance';
-import {View, Text, FlatList, StyleSheet, Pressable} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Pressable,
+  StatusBar,
+  Animated,
+  Dimensions,
+} from 'react-native';
 import CustomModal from '../../../components/CustomModal';
-import {AlertProfileUpdate} from '../../../components/AlertBox';
+import {
+  AlertProfileUpdate,
+  AlertProfileUpdate2,
+} from '../../../components/AlertBox';
 import Appbar from '../../../components/Appbar';
 import ReviewCard from '../../../components/ReviewCard';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Arrow from '../../../components/Arrow';
+import ButtonWithIcon from '../../../components/ButtonWithIcon';
+import RazorpayCheckout from 'react-native-razorpay';
 const OrderReview = ({route, navigation, userData}) => {
-  const {id} = route.params;
+  const {id, Name, email} = route.params;
   const [orderId, setOrderId] = React.useState('');
   const [isloading, setisloading] = React.useState(false);
   const [productDetails, setProductDetails] = React.useState([]);
+  const [showModal, setShowModal] = React.useState(false);
   const [detials, setDetails] = React.useState({
     subTotalPrice: '',
     totalPrice: '',
@@ -24,6 +40,8 @@ const OrderReview = ({route, navigation, userData}) => {
       state: '',
     },
   });
+  //last add
+  const heightAnim = React.useRef(new Animated.Value(1)).current;
   useFocusEffect(
     React.useCallback(() => {
       const getData = async () => {
@@ -53,22 +71,66 @@ const OrderReview = ({route, navigation, userData}) => {
       getData();
     }, []),
   );
+  const {address, city, country, pincode, state} = detials?.address;
   const handlePlaceOrder = e => {
     e.preventDefault();
-    instance
-      .post(`/placeOrder/${id}`, '', {
-        headers: {
-          Authorization: 'Bearer ' + userData.token,
-        },
-      })
-      .then(response => {
-        console.log(response?.data);
-        AlertProfileUpdate('Successfull');
+    //payment method
+    var options = {
+      description: 'Credits towards Retail Service',
+      image: 'https://raw.githubusercontent.com/ArshadX/image/main/logo.png',
+      currency: 'INR',
+      key: 'rzp_test_Z1630y120bEVrb', // Your api key
+      amount: detials.subTotalPrice * 100,
+      name: 'NeoStore',
+      prefill: {
+        email: email,
+        name: Name,
+      },
+      theme: {color: '#214fc6'},
+    };
+    RazorpayCheckout.open(options)
+      .then(data => {
+        // handle success
+        instance
+          .post(`/placeOrder/${id}`, '', {
+            headers: {
+              Authorization: 'Bearer ' + userData.token,
+            },
+          })
+          .then(response => {
+            console.log(response?.data);
+            AlertProfileUpdate2('Successfull', 'Order Placced', () =>
+              navigation.navigate('home'),
+            );
+          })
+          .catch(error => {
+            console.log(error?.message);
+            AlertProfileUpdate('Request failed', 'try again');
+          });
+        //  alert(`Success: ${data.razorpay_payment_id}`);
       })
       .catch(error => {
-        console.log(error?.message);
-        AlertProfileUpdate('Request failed', 'try again');
+        // handle failure
+        alert(`Error: ${error.code} | ${error.description}`);
       });
+    //payment method end
+  };
+
+  const animate = () => {
+    // Will change heightAnim value to 1 in 5 seconds
+    Animated.timing(heightAnim, {
+      toValue: 100,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  };
+  const animateOut = () => {
+    // Will change heigthtAnim value to 1 in 5 seconds
+    Animated.timing(heightAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
   };
   const renderItem = ({item}) => {
     return (
@@ -88,8 +150,9 @@ const OrderReview = ({route, navigation, userData}) => {
       <Appbar
         title="Back"
         leftIcon="arrow-left"
-        backgroundColor="#d3d3d3"
+        backgroundColor="#214fc6"
         onPressIcon={() => navigation.goBack()}
+        Contentcolor="#ffffff"
       />
       <CustomModal
         loadingIndicator={true}
@@ -97,18 +160,68 @@ const OrderReview = ({route, navigation, userData}) => {
         visible={isloading}
         animatedType="fade"
       />
+      <StatusBar backgroundColor="#214fc6" barStyle="light-content" />
       <View>
-        <View style={styles.subtotalView}>
-          <Text style={styles.title}>Subtotal</Text>
-          <Icon
-            name="currency-inr"
-            color="#008500"
-            size={12}
-            style={styles.icon}
-          />
-          <Text style={styles.price}>{detials.subTotalPrice}</Text>
-        </View>
         <View>
+          <Pressable
+            onPress={() => {
+              setShowModal(!showModal);
+              if (showModal == false) {
+                animate();
+              } else {
+                animateOut();
+              }
+            }}
+            style={({pressed}) => [
+              pressed ? styles.pressIn : styles.pressOut,
+              styles.selector,
+            ]}>
+            <Text style={styles.textStyle}>
+              {detials.address.address},{detials.address.city}...
+            </Text>
+            {showModal ? (
+              <Arrow arrowType="chevron-down" />
+            ) : (
+              <Arrow arrowType="chevron-right" />
+            )}
+          </Pressable>
+        </View>
+
+        <View>
+          <Animated.View style={{height: heightAnim}}>
+            {showModal ? (
+              <View style={styles.ReviewCard}>
+                <View style={styles.address}>
+                  <Text
+                    style={styles.textStyle}
+                    android_hyphenationFrequency="high">
+                    {address}, {city}, {state}, {country}, ({pincode})
+                  </Text>
+                </View>
+                <View style={styles.action}>
+                  <View>
+                    <ButtonWithIcon
+                      leftIcon={false}
+                      color="#000000"
+                      title="Add Address or Change Address"
+                      backgroundColor="#ffa812"
+                      onPress={() => navigation.goBack()}
+                    />
+                  </View>
+                </View>
+              </View>
+            ) : null}
+          </Animated.View>
+          <View style={styles.subtotalView}>
+            <Text style={styles.title}>Subtotal</Text>
+            <Icon
+              name="currency-inr"
+              color="#008500"
+              size={12}
+              style={styles.icon}
+            />
+            <Text style={styles.price}>{detials.subTotalPrice}</Text>
+          </View>
           <Pressable
             style={({pressed}) => [
               pressed ? styles.pressIn : styles.pressOut,
@@ -179,6 +292,33 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginBottom: 5,
+  },
+  selector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    padding: 10,
+    borderBottomLeftRadius: 10,
+  },
+  textStyle: {
+    color: '#000000',
+    fontFamily: 'serif',
+    marginTop: 3,
+  },
+  address: {
+    marginHorizontal: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  action: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginTop: 10,
+  },
+  ReviewCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    paddingVertical: 10,
   },
 });
 const mapStateToProps = state => {

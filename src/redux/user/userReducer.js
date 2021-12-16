@@ -1,6 +1,7 @@
 import {
   FETCH_USERS_FAILURE,
   FETCH_USERS_FAILURE2,
+  FETCH_USERS_FAILURESplash,
   FETCH_USERS_REQUEST,
   FETCH_USERS_SUCCESS,
   SignOut,
@@ -53,6 +54,12 @@ const reducer = (state = initialState, action) => {
         showModal: true,
         users: [],
         error: 'User already exist',
+      };
+    case FETCH_USERS_FAILURESplash:
+      return {
+        isloading: false,
+        users: action?.payload,
+        error: 'User does not exist',
       };
     case SignOut: //remove this
       return {

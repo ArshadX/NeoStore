@@ -14,8 +14,8 @@ import {instance} from '../../lib/Instances/Instance';
 import {AlertProfileUpdate} from '../../components/AlertBox';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Appbar from '../../components/Appbar';
+import CustomModal from '../../components/CustomModal';
 const Cart = ({navigation, userData}) => {
-  const [showModal, setShowModal] = React.useState(false);
   const [itemList, setItemList] = React.useState([]);
   const [SubTotal, setSubTotal] = React.useState(0);
   const [TotalItem, setTotalItem] = React.useState(0);
@@ -27,13 +27,13 @@ const Cart = ({navigation, userData}) => {
         try {
           const value = await userData.token;
           if (value !== null) {
-            setShowModal(true);
+            setisloading(true);
             const response = await instance.get('/getCart', {
               headers: {
                 Authorization: 'Bearer ' + value,
               },
             });
-            setShowModal(false);
+
             const list = response?.data?.cart;
             const products = response?.data?.cart?.productDetails;
             const subtotal = response?.data?.cart?.subTotalPrice;
@@ -42,57 +42,24 @@ const Cart = ({navigation, userData}) => {
             setSubTotal(subtotal);
             setTotalItem(totalitem);
             setCartId(response?.data?.cart?._id);
+            setisloading(false);
             console.log(list);
           }
         } catch (e) {
           // error reading value
           console.log(e);
-          setShowModal(false);
+          setisloading(false);
           AlertProfileUpdate('Request failed!', ' try again');
         }
       };
       getData();
     }, []),
   );
-  const updateCart = e => {
-    e.preventDefault();
-    setisloading(true);
-    const data = {
-      cart: {
-        productIds: ['612bcfedb01b0298c4fe7523'],
-        _id: '612ca96183165d5f4bd2f42b',
-        productDetails: [
-          {
-            _id: '612cd7f78886caaa925eb384',
-            productId: '612bcfedb01b0298c4fe7523',
-            productName: 'Narzo',
-            productSeller: 'Realme',
-            productColor: 'silver',
-            productImage: 'silver-Narzo-1630305205272-639349922.jpeg',
-            productStock: 40,
-            orderQuantity: 7,
-            productPrice: 20000,
-            total: 20000,
-          },
-        ],
-      },
-    };
-    instance
-      .post('​/updateCart', data, {
-        headers: {
-          Authorization: 'Bearer ' + userData.token,
-        },
-      })
-      .then(function (response) {
-        console.log(response?.data);
-        setisloading(false);
-        AlertProfileUpdate('Successfull!');
-      })
-      .catch(function (error) {
-        console.log(error);
-        setisloading(false);
-        AlertProfileUpdate('Request failed', 'try again');
-      });
+  const handleDelete = (removeItem, price) => {
+    let t = Number.parseInt(price);
+    setSubTotal(SubTotal - t);
+    const newCart = itemList.filter(value => value._id !== removeItem);
+    setItemList(newCart);
   };
   const renderItem = ({item}) => {
     return (
@@ -104,20 +71,27 @@ const Cart = ({navigation, userData}) => {
         orderQuantity={item.orderQuantity}
         color={item.productColor}
         stock={item.productStock}
-        setSubTotal={setSubTotal}
-        subTotal={SubTotal}
-        updateCart={updateCart}
+        handleDelete={handleDelete}
+        itemId={item._id}
+        total={item.total}
       />
     );
   };
   return (
     <View style={styles.Container}>
-      <StatusBar backgroundColor="#6495ed" barStyle="light-content" />
+      <StatusBar backgroundColor="#214fc6" barStyle="light-content" />
       <Appbar
         leftIcon="arrow-left"
-        title="back"
+        title="Cart"
         onPressIcon={() => navigation.goBack()}
-        backgroundColor="#d3d3d3"
+        backgroundColor="#214fc6"
+        Contentcolor="#ffffff"
+      />
+      <CustomModal
+        loadingIndicator={true}
+        text="loading..."
+        visible={isloading}
+        animatedType="fade"
       />
       <View style={styles.subtotalView}>
         <Text style={styles.title}>Subtotal</Text>
@@ -135,6 +109,7 @@ const Cart = ({navigation, userData}) => {
             pressed ? styles.pressIn : styles.pressOut,
             styles.listitem,
           ]}
+          disabled={itemList.length > 0 ? false : true}
           onPress={() => navigation.navigate('ProceedToBuy', {id: cartId})}>
           <Text style={styles.list}>Proceed to Buy</Text>
           <Text style={styles.list}>({itemList.length} items)</Text>

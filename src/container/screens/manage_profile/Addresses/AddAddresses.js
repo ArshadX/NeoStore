@@ -89,9 +89,10 @@ const AddAddresses = ({userData, navigation}) => {
     <View style={styles.container}>
       <Appbar
         leftIcon="arrow-left"
-        title="Back"
+        title="back"
         onPressIcon={() => navigation.goBack()}
-        backgroundColor="#d3d3d3"
+        backgroundColor="#214fc6"
+        Contentcolor="#ffffff"
       />
       <CustomModal
         visible={showModal}

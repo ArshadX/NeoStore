@@ -65,12 +65,13 @@ const MyAddresses = ({navigation, userData}) => {
         loadingIndicator={true}
         visible={showModal}
       />
-      <StatusBar barStyle="dark-content" backgroundColor="#6495ed" />
+      <StatusBar barStyle="light-content" backgroundColor="#214fc6" />
       <Appbar
         title="Back"
         leftIcon="arrow-left"
-        backgroundColor="#d3d3d3"
+        backgroundColor="#214fc6"
         onPressIcon={() => navigation.goBack()}
+        Contentcolor="#ffffff"
       />
       <View style={styles.contentView}>
         <Text style={styles.title}>Your Addresses</Text>

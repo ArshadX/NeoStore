@@ -5,10 +5,11 @@ import {styles} from '../../styles/styles';
 import {useFocusEffect} from '@react-navigation/native';
 import {connect} from 'react-redux';
 import {instance, profile_image} from '../../lib/Instances/Instance';
-import {Appbar, Title} from 'react-native-paper';
+import {Title} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImagePicker from 'react-native-image-crop-picker';
 import Arrow from '../../components/Arrow';
+import Appbar from '../../components/Appbar';
 const MyAccount = ({userData, navigation}) => {
   const [responseData, setresponseData] = React.useState({
     email: '',
@@ -76,10 +77,13 @@ const MyAccount = ({userData, navigation}) => {
   };
   return (
     <View style={AccountStyle.Container}>
-      <Appbar.Header style={AccountStyle.appbar}>
-        <Appbar.BackAction onPress={navigation.goBack} />
-        <Appbar.Content title="Account" subtitle="Details" />
-      </Appbar.Header>
+      <Appbar
+        leftIcon="arrow-left"
+        title="Account"
+        onPressIcon={() => navigation.goBack()}
+        backgroundColor="#214fc6"
+        Contentcolor="#ffffff"
+      />
       <View style={AccountStyle.header}>
         <View style={AccountStyle.userInfo}>
           {responseData.profilePic !== null ? (

@@ -22,7 +22,10 @@ import {
 import Button from '../../../../components/Button';
 import {HelperText} from 'react-native-paper';
 import Appbar from '../../../../components/Appbar';
-import {AlertProfileUpdate} from '../../../../components/AlertBox';
+import {
+  AlertProfileUpdate,
+  AlertProfileUpdate2,
+} from '../../../../components/AlertBox';
 
 const EditAddress = ({userData, navigation, route}) => {
   const [showModal, setShowModal] = React.useState(false);
@@ -72,7 +75,9 @@ const EditAddress = ({userData, navigation, route}) => {
           const resData = response?.data;
           console.log(resData);
           setisloading(false);
-          AlertProfileUpdate('Successful', 'Address Updated');
+          AlertProfileUpdate2('Successful', 'Address Updated', () =>
+            navigation.goBack(),
+          );
         })
         .catch(error => {
           console.log(error?.message);

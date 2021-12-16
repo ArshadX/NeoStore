@@ -1,7 +1,15 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React from 'react';
-import {View, Text, FlatList, StyleSheet, Image, Pressable} from 'react-native';
-import {Card, Title, Searchbar} from 'react-native-paper';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Image,
+  Pressable,
+  StatusBar,
+} from 'react-native';
+import {Card, Title} from 'react-native-paper';
 import {styles} from '../../styles/styles';
 import {instance, imageUrl} from '../../lib/Instances/Instance';
 import {connect} from 'react-redux';
@@ -9,7 +17,6 @@ import CustomModal from '../../components/CustomModal';
 import {Rating} from 'react-native-ratings';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import Appbar from '../../components/Appbar';
-
 const Item = ({image}) => {
   return (
     <View style={itemstyles.flatList}>
@@ -58,6 +65,7 @@ const Home = ({navigation, userData}) => {
   const [token, settoken] = React.useState('');
   const [ProductOfEachCategory, setProductOfEachCategory] = React.useState([]);
   const [TopRatedProducts, setTopRatedProducts] = React.useState([]);
+  const [searchValue, setSearchValue] = React.useState('');
   useFocusEffect(
     React.useCallback(() => {
       const getData = async () => {
@@ -106,14 +114,22 @@ const Home = ({navigation, userData}) => {
   };
   return (
     <View style={itemstyles.Container}>
+      <StatusBar
+        backgroundColor="#214fc6"
+        animated={true}
+        barStyle="light-content"
+      />
       <Appbar
         leftIcon="menu"
-        backgroundColor="#ffffff"
+        backgroundColor="#214fc6"
         onPressIcon={() => navigation.openDrawer()}
-        title="Home"
+        title="NeoStore"
+        Contentcolor="#ffffff"
         rightIcon="cart"
         onPressRightIcon={() => navigation.navigate('Cart')}
-        rightIconColor="#0000ff"
+        rightIconColor="#ffffff"
+        showSearchbar={true}
+        onPressSearch={() => navigation.navigate('search')}
       />
       <CustomModal
         loadingIndicator={true}
@@ -121,7 +137,6 @@ const Home = ({navigation, userData}) => {
         visible={isloading}
         animatedType="fade"
       />
-      <Searchbar placeholder="Search" style={itemstyles.searchbar} />
       <View style={itemstyles.footer}>
         <SwiperFlatList
           autoplay

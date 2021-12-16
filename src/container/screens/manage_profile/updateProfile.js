@@ -8,29 +8,21 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
-import {
-  TextInput,
-  HelperText,
-  RadioButton,
-  Provider,
-  Portal,
-  Modal,
-  Appbar,
-  Title,
-} from 'react-native-paper';
+import {TextInput, HelperText, RadioButton, Title} from 'react-native-paper';
 import Button from '../../../components/Button';
 import {AlertProfileUpdate} from '../../../components/AlertBox';
 import {instance, profile_image} from '../../../lib/Instances/Instance';
 import {styles} from '../../../styles/styles';
 import {changeName, changePhone} from '../../../lib/validation/validation';
 import CustomModal from '../../../components/CustomModal';
+import Appbar from '../../../components/Appbar';
 const updateProfile = ({route, userData, navigation}) => {
   const {firstname, lastname, Phone, Gender} = route?.params;
   const [fname, setfname] = React.useState(firstname);
   const [lname, setlname] = React.useState(lastname);
   const [gender, setgender] = React.useState(Gender);
   const [phone, setPhone] = React.useState(`${Phone}`);
-
+  const [disable, setDisable] = React.useState(true);
   //Validation State
   const [requesting, setRequesting] = React.useState(false);
   const [isValidfname, setisValidfname] = React.useState(true);
@@ -95,10 +87,13 @@ const updateProfile = ({route, userData, navigation}) => {
         visible={requesting}
         animatedType="fade"
       />
-      <Appbar style={Profilestyles.appbar}>
-        <Appbar.BackAction icon="archive" onPress={() => navigation.goBack()} />
-        <Title>Back</Title>
-      </Appbar>
+      <Appbar
+        leftIcon="arrow-left"
+        title="back"
+        onPressIcon={() => navigation.goBack()}
+        backgroundColor="#214fc6"
+        Contentcolor="#ffffff"
+      />
       <View style={Profilestyles.header}>
         <Image
           source={require('../../../assets/logo.png')}
@@ -124,6 +119,7 @@ const updateProfile = ({route, userData, navigation}) => {
                 onChangeText={text =>
                   changeName(text, setfname, setisValidfname, setisBlankfname)
                 }
+                onFocus={() => setDisable(false)}
               />
               <HelperText
                 type="error"
@@ -146,6 +142,7 @@ const updateProfile = ({route, userData, navigation}) => {
                 onChangeText={text =>
                   changeName(text, setlname, setisValidlname, setisBlanklname)
                 }
+                onFocus={() => setDisable(false)}
               />
               <HelperText
                 type="error"
@@ -168,6 +165,7 @@ const updateProfile = ({route, userData, navigation}) => {
                 onChangeText={text =>
                   changePhone(text, setPhone, setisValidphone, setisBlankphone)
                 }
+                onFocus={() => setDisable(false)}
               />
               <HelperText
                 type="error"
@@ -182,16 +180,26 @@ const updateProfile = ({route, userData, navigation}) => {
               <RadioButton
                 value="male"
                 status={gender === 'male' ? 'checked' : 'unchecked'}
-                onPress={() => setgender('male')}
+                onPress={() => {
+                  setgender('male');
+                  setDisable(false);
+                }}
               />
               <Text style={styles.checkboxText2}>Female</Text>
               <RadioButton
                 value="female"
                 status={gender === 'female' ? 'checked' : 'unchecked'}
-                onPress={() => setgender('female')}
+                onPress={() => {
+                  setgender('female');
+                  setDisable(false);
+                }}
               />
             </View>
-            <Button title="UPDATE" onPress={e => handleSubmit(e)} />
+            <Button
+              title="UPDATE"
+              onPress={e => handleSubmit(e)}
+              disabled={disable}
+            />
           </View>
         </KeyboardAvoidingView>
       </View>

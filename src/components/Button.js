@@ -2,10 +2,11 @@ import React from 'react';
 
 import {Pressable, Text, StyleSheet} from 'react-native';
 
-const Button = ({title, onPress}) => {
+const Button = ({title, onPress, disabled}) => {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={({pressed}) => [
         pressed ? styles.pressIn : styles.pressOut,
         styles.pressableStyle,

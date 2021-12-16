@@ -15,7 +15,8 @@ const CustomModal = ({
       animationType={animatedType}
       visible={visible}
       transparent={true}
-      onRequestClose={onRequestClose}>
+      onRequestClose={onRequestClose}
+      onShow={onShow}>
       <View style={styles.modalView}>
         <View style={styles.modalContainer}>
           {loadingIndicator ? (

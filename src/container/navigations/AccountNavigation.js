@@ -70,11 +70,11 @@ const AccountNavigation = () => {
         component={ResetPasswordfromAccount}
         options={{
           title: 'Reset Password',
-          headerShown: true,
+          headerShown: false,
           headerStyle: {
             backgroundColor: '#ffffff',
           },
-          headerShadowVisible: true,
+          headerShadowVisible: false,
         }}
       />
     </RootStack.Navigator>

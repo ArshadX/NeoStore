@@ -1,11 +1,18 @@
 import React from 'react';
 
-import {View, Text, StyleSheet, Image, Pressable} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  Dimensions,
+} from 'react-native';
 import {Card} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {imageUrl, instance} from '../lib/Instances/Instance';
 
-const ReviewCard = ({
+const OrderReviewCard = ({
   image,
   name,
   price,
@@ -20,10 +27,12 @@ const ReviewCard = ({
     <View style={itemstyles.flatList}>
       <Card style={itemstyles.cardDesign}>
         <Card.Content style={itemstyles.content}>
-          <Image
-            source={{uri: imageUrl + image}}
-            style={itemstyles.ProductsImage}
-          />
+          <View style={itemstyles.ImageView}>
+            <Image
+              source={{uri: imageUrl + image}}
+              style={itemstyles.ProductsImage}
+            />
+          </View>
           <View style={itemstyles.productInfo}>
             <Text style={itemstyles.title}>{name}</Text>
             <Text style={itemstyles.textStyle}>
@@ -52,21 +61,21 @@ const ReviewCard = ({
 
 const itemstyles = StyleSheet.create({
   flatList: {
-    marginTop: 2,
-    marginBottom: 5,
+    marginTop: 10,
+    marginBottom: 30,
     paddingBottom: 2,
   },
 
   cardDesign: {
     paddingTop: 2,
-    borderRadius: 10,
     backgroundColor: '#fefefa',
-    width: 390,
-    elevation: 5,
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    width: Dimensions.get('window').width - 23,
+    borderColor: '#4169e1',
   },
   ProductsImage: {
-    width: 31,
-    height: 100,
+    flex: 1,
     marginRight: 30,
     marginLeft: 10,
   },
@@ -78,7 +87,7 @@ const itemstyles = StyleSheet.create({
     marginLeft: 10,
     alignItems: 'flex-start',
     justifyContent: 'center',
-    marginTop: -5,
+    marginTop: -10,
   },
   textStyle: {
     color: '#353839',
@@ -121,5 +130,9 @@ const itemstyles = StyleSheet.create({
   outStock: {
     color: '#fe2712',
   },
+  ImageView: {
+    width: '25%',
+    height: '100%',
+  },
 });
-export default ReviewCard;
+export default OrderReviewCard;
