@@ -1,14 +1,6 @@
 import React from 'react';
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  KeyboardAvoidingView,
-  ScrollView,
-  Modal,
-} from 'react-native';
+import {View, Text, StyleSheet, TextInput, ScrollView} from 'react-native';
 import {HelperText} from 'react-native-paper';
 import Button from '../../../../components/Button';
 import Appbar from '../../../../components/Appbar';
@@ -21,8 +13,11 @@ import {instance} from '../../../../lib/Instances/Instance';
 import {connect} from 'react-redux';
 import CustomModal from '../../../../components/CustomModal';
 
-import {AlertProfileUpdate} from '../../../../components/AlertBox';
-const AddAddresses = ({userData, navigation}) => {
+import {
+  AlertProfileUpdate,
+  AlertProfileUpdate2,
+} from '../../../../components/AlertBox';
+const AddAddressesPTB = ({userData, navigation}) => {
   const [isBlankAddress, setBlankAddress] = React.useState(false);
   const [isBlankPincode, setBlankPincode] = React.useState(false);
   const [isBlankCity, setBlankCity] = React.useState(false);
@@ -76,7 +71,9 @@ const AddAddresses = ({userData, navigation}) => {
           const resData = response?.data;
           setShowModal(false);
           console.log(resData);
-          AlertProfileUpdate('Successful', 'Address added');
+          AlertProfileUpdate2('Successful', 'Address added', () =>
+            navigation.goBack(),
+          );
         })
         .catch(error => {
           console.log(error?.message);
@@ -226,4 +223,4 @@ const mapStateToProps = state => {
     userData: state.user,
   };
 };
-export default connect(mapStateToProps, null)(AddAddresses);
+export default connect(mapStateToProps, null)(AddAddressesPTB);

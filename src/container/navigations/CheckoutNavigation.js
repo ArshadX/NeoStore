@@ -1,47 +1,39 @@
 import React from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
-import Cart from '../screens/Cart';
-
-import ProceedToBuy from '../screens/Checkout/ProceedToBuy';
-
 import OrderReview from '../screens/Checkout/OrderReview';
 import EditAddfromPTB from '../screens/manage_profile/Addresses/EditAddfromPTB';
 import AddAddressPTB from '../screens/manage_profile/Addresses/AddAddressPTB';
-import CheckoutNavigation from './CheckoutNavigation';
-const CartStack = createNativeStackNavigator();
+import ProceedToBuy from '../screens/Checkout/ProceedToBuy';
+const checkOut = createNativeStackNavigator();
 
-const CartStackScreen = () => {
+const CheckoutNavigation = ({route}) => {
+  const {id} = route.params;
   return (
-    <CartStack.Navigator initialRouteName="CartScreen">
-      <CartStack.Screen
-        name="CartScreen"
-        component={Cart}
+    <checkOut.Navigator initialRouteName="ProceedToBuy">
+      <checkOut.Screen
+        name="ProceedToBuy"
+        component={ProceedToBuy}
         options={{headerShown: false}}
+        initialParams={{id}}
       />
-      <CartStack.Screen
-        name="Checkout"
-        component={CheckoutNavigation}
-        options={{headerShown: false}}
-      />
-      {/* <CartStack.Screen
+      <checkOut.Screen
         name="OrderReview"
         component={OrderReview}
         options={{headerShown: false}}
       />
-      <CartStack.Screen
+      <checkOut.Screen
         name="EditAddressPTB"
         component={EditAddfromPTB}
         options={{headerShown: false}}
       />
-      <CartStack.Screen
+      <checkOut.Screen
         name="AddAddressPTB"
         component={AddAddressPTB}
         options={{headerShown: false}}
-      /> */}
-    </CartStack.Navigator>
+      />
+    </checkOut.Navigator>
   );
 };
 
-export default CartStackScreen;
+export default CheckoutNavigation;

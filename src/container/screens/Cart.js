@@ -110,7 +110,7 @@ const Cart = ({navigation, userData}) => {
             styles.listitem,
           ]}
           disabled={itemList.length > 0 ? false : true}
-          onPress={() => navigation.navigate('ProceedToBuy', {id: cartId})}>
+          onPress={() => navigation.navigate('Checkout', {id: cartId})}>
           <Text style={styles.list}>Proceed to Buy</Text>
           <Text style={styles.list}>({itemList.length} items)</Text>
         </Pressable>

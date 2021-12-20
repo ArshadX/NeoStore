@@ -3,6 +3,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AllProduct from '../screens/AllProduct';
 import FilterScreen from '../screens/FilterScreen';
+import SearchedProducts from '../screens/SearchedProducts';
 const ProductStack = createNativeStackNavigator();
 
 const ProductListStack = () => {
@@ -16,6 +17,11 @@ const ProductListStack = () => {
       <ProductStack.Screen
         name="filter"
         component={FilterScreen}
+        options={{headerShown: false}}
+      />
+      <ProductStack.Screen
+        name="searchedProduct"
+        component={SearchedProducts}
         options={{headerShown: false}}
       />
     </ProductStack.Navigator>

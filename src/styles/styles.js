@@ -82,6 +82,7 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     marginRight: 10,
     marginLeft: 10,
+    color: '#000000',
   },
   image: {
     width: 100,

@@ -84,7 +84,7 @@ export const login = (data, screen) => {
       })
       .catch(error => {
         const errorMsg = error;
-        dispatch(fetchUsersFailure2(errorMsg));
+        dispatch(fetchUsersFailure(errorMsg));
         console.log(errorMsg);
       });
   };

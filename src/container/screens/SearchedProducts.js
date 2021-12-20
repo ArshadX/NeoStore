@@ -1,14 +1,13 @@
 import React from 'react';
 
-import {Text, View, FlatList, StyleSheet, Image} from 'react-native';
 import {
-  Button,
-  IconButton,
-  Title,
-  Provider,
-  Portal,
-  Modal,
-} from 'react-native-paper';
+  Text,
+  View,
+  FlatList,
+  StyleSheet,
+  Image,
+  Dimensions,
+} from 'react-native';
 
 import {instance} from '../../lib/Instances/Instance';
 import {AllItems, Category} from '../../components/Filter';
@@ -55,7 +54,7 @@ const SearchedProducts = ({route, userData, navigation}) => {
     <View style={itemstyles.Container}>
       <Appbar
         leftIcon="arrow-left"
-        title="back"
+        title="Products"
         onPressIcon={() => navigation.goBack()}
         rightIcon="cart"
         rightIconColor="#ffffff"
@@ -64,11 +63,21 @@ const SearchedProducts = ({route, userData, navigation}) => {
         Contentcolor="#ffffff"
       />
       <View style={itemstyles.header}>
-        <FlatList
-          data={CommonProducts}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-        />
+        {list.length == 0 ? (
+          <View>
+            <Image
+              source={require('../../assets/bear.gif')}
+              style={itemstyles.image}
+            />
+            <Text style={itemstyles.title2}>Not available</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={CommonProducts}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+          />
+        )}
       </View>
     </View>
   );
@@ -77,7 +86,7 @@ const SearchedProducts = ({route, userData, navigation}) => {
 const itemstyles = StyleSheet.create({
   Container: {
     flex: 1,
-    backgroundColor: '#dcdcdc',
+    backgroundColor: '#f8f8ff',
   },
   appbar: {
     backgroundColor: '#fefefa',
@@ -107,7 +116,12 @@ const itemstyles = StyleSheet.create({
     marginTop: 3,
     fontWeight: 'bold',
   },
-
+  title2: {
+    fontSize: 16,
+    marginTop: 3,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+  },
   button: {
     backgroundColor: '#5b92e5',
     marginRight: 10,
@@ -127,6 +141,12 @@ const itemstyles = StyleSheet.create({
   buttonContent: {fontSize: 10, color: '#000000'},
   cross: {
     marginRight: 200,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    alignSelf: 'center',
+    marginTop: Dimensions.get('window').height / 3.4,
   },
 });
 const mapStateToProps = state => {

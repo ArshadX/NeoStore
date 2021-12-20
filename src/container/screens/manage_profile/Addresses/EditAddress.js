@@ -42,7 +42,7 @@ const EditAddress = ({userData, navigation, route}) => {
   const [isBlankPincode, setBlankPincode] = React.useState(false);
   const [isBlankCity, setBlankCity] = React.useState(false);
   const [isBlankState, setBlankState] = React.useState(false);
-
+  const [disable, setDisable] = React.useState(true);
   const handleSubmit = e => {
     e.preventDefault();
     if ((Address && Pincode && City && State && selectCountry) == '') {
@@ -85,7 +85,7 @@ const EditAddress = ({userData, navigation, route}) => {
     <View style={styles.container}>
       <Appbar
         leftIcon="arrow-left"
-        title="Back"
+        title="Edit Address"
         onPressIcon={() => navigation.goBack()}
         backgroundColor="#214fc6"
         Contentcolor="#ffffff"
@@ -104,7 +104,10 @@ const EditAddress = ({userData, navigation, route}) => {
       />
       <Text style={styles.title}>Edit your address</Text>
       <Pressable
-        onPress={() => setShowModal(true)}
+        onPress={() => {
+          setDisable(false);
+          setShowModal(true);
+        }}
         style={({pressed}) => [
           pressed ? styles.pressIn : styles.pressOut,
           styles.selector,
@@ -118,9 +121,10 @@ const EditAddress = ({userData, navigation, route}) => {
           <KeyboardAvoidingView behavior="height">
             <Text style={styles.title}>Address</Text>
             <TextInput
-              onChangeText={text =>
-                handleAddress(text, setAddress, setBlankAddress)
-              }
+              onChangeText={text => {
+                setDisable(false);
+                handleAddress(text, setAddress, setBlankAddress);
+              }}
               value={Address}
               placeholder="Ex. Street name etc."
               style={styles.textInput}
@@ -131,9 +135,10 @@ const EditAddress = ({userData, navigation, route}) => {
 
             <Text style={styles.title}>Pincode</Text>
             <TextInput
-              onChangeText={text =>
-                handlePincode(text, setPincode, setBlankPincode)
-              }
+              onChangeText={text => {
+                setDisable(false);
+                handlePincode(text, setPincode, setBlankPincode);
+              }}
               value={Pincode}
               keyboardType="phone-pad"
               placeholder="Ex. 12345"
@@ -146,9 +151,10 @@ const EditAddress = ({userData, navigation, route}) => {
             <Text style={styles.title}>City</Text>
 
             <TextInput
-              onChangeText={text =>
-                handletextChange(text, setCity, setisValidCity, setBlankCity)
-              }
+              onChangeText={text => {
+                setDisable(false);
+                handletextChange(text, setCity, setisValidCity, setBlankCity);
+              }}
               value={City}
               placeholder="Ex. Delhi"
               style={styles.textInput}
@@ -159,9 +165,15 @@ const EditAddress = ({userData, navigation, route}) => {
 
             <Text style={styles.title}>State</Text>
             <TextInput
-              onChangeText={text =>
-                handletextChange(text, setState, setisValidState, setBlankState)
-              }
+              onChangeText={text => {
+                setDisable(false);
+                handletextChange(
+                  text,
+                  setState,
+                  setisValidState,
+                  setBlankState,
+                );
+              }}
               value={State}
               placeholder="Ex. Uttar Pradesh"
               style={styles.textInput}
@@ -169,7 +181,7 @@ const EditAddress = ({userData, navigation, route}) => {
             <HelperText visible={isBlankState || !isValidState} type="error">
               {isBlankState ? '*required' : 'Invalid'}
             </HelperText>
-            <Button onPress={handleSubmit} title="Submit" />
+            <Button onPress={handleSubmit} title="Submit" disabled={disable} />
           </KeyboardAvoidingView>
         </View>
       </ScrollView>

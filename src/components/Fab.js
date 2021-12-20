@@ -4,12 +4,14 @@ import {View, Text, StyleSheet, Pressable} from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Fab = ({iconName, size, color, backgroundColor, onPress}) => {
+const Fab = ({iconName, size, color, backgroundColor, onPress, disabled}) => {
   return (
     <Pressable
+      disabled={disabled}
       style={({pressed}) => [
         pressed ? styles.pressIn : {backgroundColor: backgroundColor},
         styles.fabStyle,
+        disabled ? {backgroundColor: '#696969'} : null,
       ]}
       onPress={onPress}>
       <Icon name={iconName} size={size} color={color} />

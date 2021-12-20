@@ -17,9 +17,11 @@ import CustomModal from '../../components/CustomModal';
 import {Rating} from 'react-native-ratings';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import Appbar from '../../components/Appbar';
-const Item = ({image}) => {
+const Item = ({image, name, navigation}) => {
   return (
-    <View style={itemstyles.flatList}>
+    <Pressable
+      style={itemstyles.flatList}
+      onPress={() => navigation.navigate('allProduct')}>
       <Card style={itemstyles.cardDesign}>
         <Image
           source={{
@@ -28,7 +30,7 @@ const Item = ({image}) => {
           style={itemstyles.productOfEachCategory}
         />
       </Card>
-    </View>
+    </Pressable>
   );
 };
 const TopRatedItem = ({image, name, rating, price, id, navigation}) => {
@@ -62,10 +64,8 @@ const TopRatedItem = ({image, name, rating, price, id, navigation}) => {
 };
 const Home = ({navigation, userData}) => {
   const [isloading, setisloading] = React.useState(false);
-  const [token, settoken] = React.useState('');
   const [ProductOfEachCategory, setProductOfEachCategory] = React.useState([]);
   const [TopRatedProducts, setTopRatedProducts] = React.useState([]);
-  const [searchValue, setSearchValue] = React.useState('');
   useFocusEffect(
     React.useCallback(() => {
       const getData = async () => {
@@ -98,7 +98,7 @@ const Home = ({navigation, userData}) => {
   );
 
   const renderItem = ({item}) => {
-    return <Item image={item.image} />;
+    return <Item image={item.image} name={item.name} navigation={navigation} />;
   };
   const renderItemToprated = ({item}) => {
     return (

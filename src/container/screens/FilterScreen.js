@@ -4,85 +4,16 @@ import {View, Text, StyleSheet, Pressable, FlatList} from 'react-native';
 import Appbar from '../../components/Appbar';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SideTab from '../../components/SideTab';
-import {Checkbox, RadioButton} from 'react-native-paper';
+import {Checkbox} from 'react-native-paper';
 import Fab from '../../components/Fab';
 import {instance} from '../../lib/Instances/Instance';
 import {connect} from 'react-redux';
 import CustomModal from '../../components/CustomModal';
-const ListOption = ({
-  item,
-  categoryList,
-  filterOption,
-  colorList,
-  setOrder,
-  setSort,
-  checkedItem,
-  setCheckedItem,
-}) => {
-  const [selected, setSelected] = React.useState(false);
-  return (
-    <View style={styles.optionText}>
-      {filterOption == 'Sortby' ? (
-        <Checkbox.Android
-          status={checkedItem === item ? 'checked' : 'unchecked'}
-          uncheckedColor="#000000"
-          centered={true}
-          color="#4169e1"
-          onPress={() => {
-            setCheckedItem(item);
-            setSort(item);
-          }}
-        />
-      ) : filterOption == 'Orderby' ? (
-        <Checkbox
-          status={checkedItem == item ? 'checked' : 'unchecked'}
-          uncheckedColor="#000000"
-          centered={true}
-          color="#4169e1"
-          onPress={() => {
-            if (item === 'Low to High') {
-              setOrder('asc');
-              setCheckedItem(item);
-            } else if (item === 'High to Low') {
-              setOrder('desc');
-              setCheckedItem(item);
-            }
-          }}
-        />
-      ) : (
-        <Checkbox.Android
-          status={selected ? 'checked' : 'unchecked'}
-          uncheckedColor="#000000"
-          centered={true}
-          color="#4169e1"
-          onPress={() => {
-            if (filterOption == 'Category') {
-              if (selected == false) {
-                setSelected(true);
-                categoryList.push(item);
-              } else {
-                setSelected(false);
-                let index = categoryList.indexOf(item);
-                categoryList.splice(index, 1);
-              }
-            } else if (filterOption == 'Color') {
-              if (selected == false) {
-                setSelected(true);
-                colorList.push(item);
-              } else {
-                setSelected(false);
-                let index = colorList.indexOf(item);
-                colorList.splice(index, 1);
-              }
-              console.log(colorList);
-            }
-          }}
-        />
-      )}
-      <Text style={styles.text}>{item}</Text>
-    </View>
-  );
-};
+import ListOptions from '../../components/ListOptions';
+import ListOptionsColor from '../../components/ListOptionsColor';
+import ListOptionsSortBy from '../../components/ListOptionsSortBy';
+import ListOptionOrderBy from '../../components/ListOptionOrderBy';
+import {AlertProfileUpdate} from '../../components/AlertBox';
 const FilterScreen = ({route, navigation, userData}) => {
   const {Categories, Colors} = route?.params;
   const [activeCat, setactiveCat] = React.useState(false);
@@ -97,59 +28,98 @@ const FilterScreen = ({route, navigation, userData}) => {
   const [order, setOrder] = React.useState('desc');
   const [sort, setSort] = React.useState('price');
   const [filterOption, setFilterOption] = React.useState('');
-  const [checkedItem, setCheckedItem] = React.useState('');
   const [isloading, setisloading] = React.useState(false);
-  const renderItem = ({item}) => {
+  const [disable, setDisable] = React.useState(true);
+  //Category
+  const renderItemCat = ({item}) => {
     return (
-      <ListOption
+      <ListOptions
         item={item}
         categoryList={categoryList}
+        setDisable={setDisable}
+      />
+    );
+  };
+  //Color
+  const renderItemColor = ({item}) => {
+    return (
+      <ListOptionsColor
+        item={item}
         colorList={colorList}
-        filterOption={filterOption}
-        setOrder={setOrder}
+        setDisable={setDisable}
+      />
+    );
+  };
+  //SortBy
+  const renderItemSortBy = ({item}) => {
+    return (
+      <ListOptionsSortBy
+        item={item}
         setSort={setSort}
-        checkedItem={checkedItem}
-        setCheckedItem={setCheckedItem}
+        sort={sort}
+        setDisable={setDisable}
+      />
+    );
+  };
+  // Order By
+  const renderItemOrderBy = ({item}) => {
+    return (
+      <ListOptionOrderBy
+        item={item}
+        setOrder={setOrder}
+        order={order}
+        setDisable={setDisable}
       />
     );
   };
   const handleFilter = e => {
     e.preventDefault();
-    const data = {
-      categories: categoryList,
-      colors: colorList,
-      sort: {
-        basedOn: sort,
-        order: order,
-      },
-    };
-    setisloading(true);
-    instance
-      .post('/filterCommonProducts', data, {
-        headers: {
-          Authorization: 'Bearer ' + userData.token,
+    if (categoryList.length == 0 && colorList.length == 0) {
+      AlertProfileUpdate(
+        'Request failed',
+        "you haven't selected the filter options",
+      );
+    } else {
+      const data = {
+        categories: categoryList,
+        colors: colorList,
+        sort: {
+          basedOn: sort,
+          order: order,
         },
-      })
-      .then(response => {
-        const itemList = response?.data?.filteredcommonProducts;
-        console.log(itemList);
-        setisloading(false);
-        navigation.navigate('searchedProducts', {list: itemList});
-      })
-      .catch(error => {
-        console.log(error?.message);
-        setisloading(false);
-      });
+      };
+      setisloading(true);
+      instance
+        .post('/filterCommonProducts', data, {
+          headers: {
+            Authorization: 'Bearer ' + userData.token,
+          },
+        })
+        .then(response => {
+          const itemList = response?.data?.filteredcommonProducts;
+          console.log(itemList);
+          setisloading(false);
+          navigation.navigate('searchedProduct', {list: itemList});
+        })
+        .catch(error => {
+          console.log(error?.message);
+          setisloading(false);
+          AlertProfileUpdate('Request failed', 'try again');
+        });
+    }
   };
   return (
     <View style={styles.container}>
       <Appbar
         leftIcon="arrow-left"
-        title="back"
+        title="Filter"
         onPressIcon={() => navigation.goBack()}
         rightIcon="filter-remove"
         rightIconColor="#ffffff"
-        onPressRightIcon={() => navigation.navigate('filter')}
+        onPressRightIcon={() => {
+          setCategoryList([]), setColorList([]);
+          navigation.goBack();
+        }}
         backgroundColor="#214fc6"
         Contentcolor="#ffffff"
       />
@@ -159,6 +129,7 @@ const FilterScreen = ({route, navigation, userData}) => {
         backgroundColor="#214fc6"
         size={25}
         onPress={e => handleFilter(e)}
+        disabled={disable}
       />
       <CustomModal
         loadingIndicator={true}
@@ -232,7 +203,15 @@ const FilterScreen = ({route, navigation, userData}) => {
         </View>
         {/**option */}
         <View style={styles.option}>
-          <FlatList data={option} renderItem={renderItem} />
+          {filterOption === 'Orderby' ? (
+            <FlatList data={option} renderItem={renderItemOrderBy} />
+          ) : filterOption == 'Color' ? (
+            <FlatList data={Colors} renderItem={renderItemColor} />
+          ) : filterOption == 'Sortby' ? (
+            <FlatList data={Sortby} renderItem={renderItemSortBy} />
+          ) : filterOption === 'Category' ? (
+            <FlatList data={Categories} renderItem={renderItemCat} />
+          ) : null}
         </View>
       </View>
     </View>

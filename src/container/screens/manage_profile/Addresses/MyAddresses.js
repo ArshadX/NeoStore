@@ -67,7 +67,7 @@ const MyAddresses = ({navigation, userData}) => {
       />
       <StatusBar barStyle="light-content" backgroundColor="#214fc6" />
       <Appbar
-        title="Back"
+        title="Address List"
         leftIcon="arrow-left"
         backgroundColor="#214fc6"
         onPressIcon={() => navigation.goBack()}
@@ -91,6 +91,7 @@ const MyAddresses = ({navigation, userData}) => {
           scrollEnabled={true}
           alwaysBounceVertical={true}
           progressViewOffset={10}
+          inverted={true}
         />
       </View>
     </View>

@@ -5,6 +5,7 @@ import {imageUrl, instance} from '../lib/Instances/Instance';
 import {Card} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconButton from './IconButton';
+import {AlertProfileUpdate4} from '../components/AlertBox';
 import {connect} from 'react-redux';
 const CartCard = ({
   image,
@@ -46,7 +47,13 @@ const CartCard = ({
         <View style={itemstyles.action}>
           <Pressable
             android_ripple={{radius: 30, borderless: true}}
-            onPress={() => handleDelete(itemId, total)}>
+            onPress={() =>
+              AlertProfileUpdate4(
+                'Caution!',
+                'Do you want to remove the product from cart?',
+                () => handleDelete(itemId, total),
+              )
+            }>
             <Icon name="delete" color="#000000" size={30} />
           </Pressable>
         </View>

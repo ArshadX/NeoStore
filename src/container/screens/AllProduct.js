@@ -64,18 +64,18 @@ const AllProduct = ({userData, navigation}) => {
     <View style={itemstyles.Container}>
       <Appbar
         leftIcon="arrow-left"
-        title="back"
+        title="Products"
         onPressIcon={() => navigation.goBack()}
         rightIcon="filter"
-        rightIconColor="#0000ff"
+        rightIconColor="#ffffff"
         onPressRightIcon={() =>
           navigation.navigate('filter', {
             Categories: AllCategories,
             Colors: AllColors,
           })
         }
-        backgroundColor="#ffffff"
-        Contentcolor="#000000"
+        backgroundColor="#214fc6"
+        Contentcolor="#ffffff"
       />
       <CustomModal
         loadingIndicator={true}

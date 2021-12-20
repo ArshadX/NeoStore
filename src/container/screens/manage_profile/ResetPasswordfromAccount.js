@@ -78,7 +78,7 @@ const ResetPasswordfromAccount = ({userData, navigation}) => {
       />
       <Appbar
         leftIcon="arrow-left"
-        title="back"
+        title="Reset Password"
         onPressIcon={() => navigation.goBack()}
         backgroundColor="#214fc6"
         Contentcolor="#ffffff"

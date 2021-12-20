@@ -81,6 +81,7 @@ export const changeConfirmPassword = (
   let temp = text.trim();
   if (temp === '') {
     setValidConfirmPassword(true);
+    setconfirmPassword('');
   } else {
     setValidConfirmPassword(password == temp);
     setconfirmPassword(temp);

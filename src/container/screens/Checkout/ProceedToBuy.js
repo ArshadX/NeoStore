@@ -7,6 +7,7 @@ import {
   StatusBar,
   Pressable,
   FlatList,
+  Dimensions,
 } from 'react-native';
 import Appbar from '../../../components/Appbar';
 import Arrow from '../../../components/Arrow';
@@ -110,6 +111,12 @@ const ProceedToBuy = ({route, navigation, userData}) => {
       />
       <View style={styles.ViewAddress}>
         <Text style={styles.title}>Your Addresses</Text>
+        <Pressable
+          style={styles.button1}
+          onPress={() => navigation.navigate('AddAddressPTB')}>
+          <Text style={styles.textStyle}>Add a new address</Text>
+          <Arrow arrowType="chevron-right" />
+        </Pressable>
         <Text style={styles.titleMedium}>Select Address</Text>
         <FlatList
           data={AddressList}
@@ -118,6 +125,7 @@ const ProceedToBuy = ({route, navigation, userData}) => {
           scrollEnabled={true}
           alwaysBounceVertical={true}
           progressViewOffset={10}
+          inverted={true}
         />
       </View>
     </View>
@@ -147,6 +155,16 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   button: {
+    marginTop: 10,
+    paddingTop: 15,
+    paddingLeft: 10,
+    paddingBottom: 15,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#a9a9a9',
+  },
+  button1: {
+    width: Dimensions.get('window').width,
     marginTop: 10,
     paddingTop: 15,
     paddingLeft: 10,

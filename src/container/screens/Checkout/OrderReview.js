@@ -1,4 +1,8 @@
-import {useFocusEffect} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigationState,
+  CommonActions,
+} from '@react-navigation/native';
 import React from 'react';
 import {connect} from 'react-redux';
 import {instance} from '../../../lib/Instances/Instance';
@@ -40,6 +44,8 @@ const OrderReview = ({route, navigation, userData}) => {
       state: '',
     },
   });
+  //Navigation State
+  const navState = useNavigationState(state => state);
   //last add
   const heightAnim = React.useRef(new Animated.Value(1)).current;
   useFocusEffect(
@@ -60,6 +66,7 @@ const OrderReview = ({route, navigation, userData}) => {
             setOrderId(list?.order?._id);
             console.log(list?.order);
             setisloading(false);
+            console.log(navState);
           }
         } catch (e) {
           // error reading value
@@ -100,7 +107,12 @@ const OrderReview = ({route, navigation, userData}) => {
           .then(response => {
             console.log(response?.data);
             AlertProfileUpdate2('Successfull', 'Order Placced', () =>
-              navigation.navigate('home'),
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 1,
+                  routes: [{name: 'Home'}],
+                }),
+              ),
             );
           })
           .catch(error => {
@@ -148,7 +160,7 @@ const OrderReview = ({route, navigation, userData}) => {
   return (
     <View style={styles.Container}>
       <Appbar
-        title="Back"
+        title="Order Details"
         leftIcon="arrow-left"
         backgroundColor="#214fc6"
         onPressIcon={() => navigation.goBack()}

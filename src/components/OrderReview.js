@@ -16,6 +16,7 @@ const CustomFlatlist2 = ({
   orderPlacedOn,
   productsInOrder,
   totalPrice,
+  navigation,
 }) => {
   const [showItem, setShowItem] = React.useState(false);
   const heightAnim = React.useRef(new Animated.Value(1)).current;

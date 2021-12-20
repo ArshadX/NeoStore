@@ -135,13 +135,14 @@ const ProductDetail = ({route, navigation, userData}) => {
         animatedType="fade"
       />
       <Appbar
-        title="back"
+        title="Product Details"
         leftIcon="arrow-left"
         onPressIcon={() => navigation.goBack()}
-        backgroundColor="#ffffff"
+        backgroundColor="#214fc6"
         rightIcon="cart"
-        rightIconColor="#0000ff"
+        rightIconColor="#ffffff"
         onPressRightIcon={() => navigation.navigate('Cart')}
+        Contentcolor="#ffffff"
       />
       <Fab
         iconName="cart"

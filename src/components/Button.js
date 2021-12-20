@@ -10,6 +10,7 @@ const Button = ({title, onPress, disabled}) => {
       style={({pressed}) => [
         pressed ? styles.pressIn : styles.pressOut,
         styles.pressableStyle,
+        disabled ? {backgroundColor: '#696969'} : null,
       ]}>
       <Text style={styles.buttonText}>{title}</Text>
     </Pressable>

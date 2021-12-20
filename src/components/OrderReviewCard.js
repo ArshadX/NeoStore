@@ -24,7 +24,9 @@ const OrderReviewCard = ({
   const [OrderQuantity, setOrderQuantity] = React.useState(orderQuantity);
 
   return (
-    <View style={itemstyles.flatList}>
+    <Pressable
+      style={itemstyles.flatList}
+      onPress={() => navigation.navigate('productDetails', {id: id})}>
       <Card style={itemstyles.cardDesign}>
         <Card.Content style={itemstyles.content}>
           <View style={itemstyles.ImageView}>
@@ -55,7 +57,7 @@ const OrderReviewCard = ({
           </View>
         </View>
       </Card>
-    </View>
+    </Pressable>
   );
 };
 
