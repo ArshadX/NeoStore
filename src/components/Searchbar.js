@@ -106,6 +106,9 @@ const Searchbar = ({navigation, userData}) => {
           style={styles.textinputContainer}
           autoFocus={true}
         />
+        <Pressable style={styles.searchIcon} onPress={e => handleSubmit(e)}>
+          <Icon name="magnify" size={32} color="#ffffff" />
+        </Pressable>
       </View>
       <View style={styles.flatList}>
         <FlatList
@@ -122,6 +125,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
+  },
+  searchIcon: {
+    backgroundColor: '#214fc6',
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 5,
+    paddingRight: 5,
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
   },
   textinput: {
     flexDirection: 'row',
